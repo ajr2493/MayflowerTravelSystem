@@ -65,7 +65,7 @@ public class User {
 
                 con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
                 if (con != null) {
-                    String sql = "INSERT INTO users(name, password) VALUES(?,?)";
+                    String sql = "INSERT INTO users(username, password) VALUES(?,?)";
                     ps = con.prepareStatement(sql);
                     ps.setString(1, name);
                     ps.setString(2, password);
@@ -86,6 +86,7 @@ public class User {
         if (i > 0) {
             return "success";
         } else {
+            System.out.println("Unsuccess");
             return "unsuccess";
         }
     }

@@ -25,7 +25,32 @@
             valid
         </from-outcome>
         <to-view-id>
-            /home.xhtml
+            /main.xhtml
+        </to-view-id>
+    </navigation-case>
+</navigation-rule>
+
+<navigation-rule>
+    <display-name>
+        /register
+    </display-name>
+    <from-view-id>
+        /register.xhtml
+    </from-view-id>
+    <navigation-case>
+        <from-outcome>
+            unsuccess
+        </from-outcome>
+        <to-view-id>
+            /error.xhtml
+        </to-view-id>
+    </navigation-case>
+        <navigation-case>
+        <from-outcome>
+            success
+        </from-outcome>
+        <to-view-id>
+            /login.xhtml
         </to-view-id>
     </navigation-case>
 </navigation-rule>
