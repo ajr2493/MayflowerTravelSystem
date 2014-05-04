@@ -33,4 +33,18 @@
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
 </servlet-mapping>
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>
+            NotAllowed
+        </web-resource-name>
+        <url-pattern>/Customers/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+        <role-name>CUSTOMER</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
 </web-app>

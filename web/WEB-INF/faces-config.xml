@@ -25,7 +25,7 @@
             valid
         </from-outcome>
         <to-view-id>
-            /main.xhtml
+            /Customers/main.xhtml
         </to-view-id>
     </navigation-case>
 </navigation-rule>
