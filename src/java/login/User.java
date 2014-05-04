@@ -52,13 +52,13 @@ public class User {
     }
 
     public String add() {
-        try {
-		Class.forName("com.mysql.jdbc.Driver");
-	} catch (ClassNotFoundException e) {
-		System.out.println("Where is your MySQL JDBC Driver?");
-		e.printStackTrace();
-		return "";
-	}
+//        try {
+//		Class.forName("com.mysql.jdbc.Driver");
+//	} catch (ClassNotFoundException e) {
+//		System.out.println("Where is your MySQL JDBC Driver?");
+//		e.printStackTrace();
+//		return "";
+//	}
         int i = 0;
         if (name != null) {
             PreparedStatement ps = null;

@@ -3,10 +3,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Customer Home Page</title>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <table>
+            <td>
+                <tr>
+                    <h:button value="Make a Reservation" outcome="reserve"></h:button>
+                </tr> 
+                <tr>
+                    <h:button value="Reverse Auction" outcome="auction"></h:button>
+                </tr>
+                <tr>
+                    <h:button value="My Reservations" outcome="my_reservations"></h:button>
+                </tr>
+            </td>
+            <td>
+                <tr>
+                    <h:button value="Recommend a Flight" outcome="recommend"></h:button>
+                </tr>
+                <tr>
+                    <h:button value="Best Selling Flights" outcome="best_selling"></h:button>
+                </tr>
+            </td>
+        </table>
     </h:body>
 </html>
 
