@@ -7,25 +7,30 @@
     </h:head>
     <h:body>
         <table>
-            <td>
-                <tr>
+            <tr>
+                <td>
                     <h:button value="Make a Reservation" outcome="reserve"></h:button>
-                </tr> 
-                <tr>
+                </td> 
+                <td>
                     <h:button value="Reverse Auction" outcome="auction"></h:button>
-                </tr>
-                <tr>
+                </td>
+                <td>
                     <h:button value="My Reservations" outcome="my_reservations"></h:button>
-                </tr>
-            </td>
-            <td>
-                <tr>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <h:button value="Recommend a Flight" outcome="recommend"></h:button>
-                </tr>
-                <tr>
+                </td>
+                <td>
                     <h:button value="Best Selling Flights" outcome="best_selling"></h:button>
-                </tr>
-            </td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h:form><h:commandButton value="Logout" action="#{user.logout()}"/></h:form>
+                </td>
+            </tr>
         </table>
     </h:body>
 </html>
