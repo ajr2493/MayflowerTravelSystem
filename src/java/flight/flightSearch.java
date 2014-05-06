@@ -98,7 +98,7 @@ public class flightSearch {
                 ps.setInt(1, selectedFlight.flightNo);
 
                 ps.execute();
-                rs = ps.getResultSet();
+            rs = ps.getResultSet();
                 while(rs.next()){
                      takenSeats.add(rs.getInt("SeatNo"));
                 }
@@ -212,7 +212,6 @@ public class flightSearch {
                 ps.setString(5, selectedFlight.seatClass);
                 ps.setString(6, mealPreference);
                 
-                System.out.println(mealPreference);
                 System.out.println(ps);
                 
                 ps.execute();
