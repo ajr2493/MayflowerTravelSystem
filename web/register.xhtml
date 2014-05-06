@@ -1,38 +1,79 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" 
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
 
-<h:head>
-<title>Registration Page</title>
-</h:head>
-<h:body>
-<f:view>
-<h:form id="registerForm">
-<table>
-<tr>
-<td><h:outputText value="Enter Your Name"/></td>
-<td><h:inputText id="name" value="#{user.name}" required="true"
-requiredMessage="Name field should be filled"/></td>
-<td><h:message for="name" style="color:red"/></td>
-</tr>
-<tr>
-<td><h:outputText value="Enter Password :"/></td>
-<td><h:inputSecret id="psw" value="#{user.password}" required="true"
-requiredMessage="Password field should be filled"/></td>
-<td><h:message for="psw" style="color:red"/></td>
-</tr>
-<tr>
-<td/>
-<td><h:commandButton value="Register" action="#{user.add}"/></td>
-</tr>
-<tr>
-<td><h:outputLink value="home.xhtml">Home</h:outputLink></td>
-</tr>
-</table>
-</h:form>
-</f:view>
-</h:body>
+    <h:head>
+        <title>Registration Page</title>
+    </h:head>
+    <h:body>
+        <f:view>
+            <h:form id="registerForm">
+                <table>
+                    <tr>
+                        <td><h:outputText value="Enter Your Email"/></td>
+                        <td><h:inputText id="name" value="#{user.name}" required="true"
+                                         requiredMessage="Name field should be filled"/></td>
+                        <td><h:message for="name" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Choose Password :"/></td>
+                        <td><h:inputSecret id="psw" value="#{user.password}" required="true"
+                                           requiredMessage="Password field should be filled"/></td>
+                        <td><h:message for="psw" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter First Name"/></td>
+                        <td><h:inputText id="fname" value="#{user.fname}" required="true"
+                                         requiredMessage="Name field should be filled"/></td>
+                        <td><h:message for="fname" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter Last Name"/></td>
+                        <td><h:inputText id="lname" value="#{user.lname}" required="true"
+                                         requiredMessage="Name field should be filled"/></td>
+                        <td><h:message for="lname" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter Address"/></td>
+                        <td><h:inputText id="addr" value="#{user.address}" required="true"
+                                         requiredMessage="Address field should be filled"/></td>
+                        <td><h:message for="addr" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter City"/></td>
+                        <td><h:inputText id="city" value="#{user.city}" required="true"
+                                         requiredMessage="City field should be filled"/></td>
+                        <td><h:message for="city" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter State"/></td>
+                        <td><h:inputText id="state" value="#{user.state}" required="true"
+                                         requiredMessage="State field should be filled"/></td>
+                        <td><h:message for="state" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter Zip Code"/></td>
+                        <td><h:inputText id="zip" value="#{user.zip}" required="true"
+                                         requiredMessage="Zip field should be filled"/></td>
+                        <td><h:message for="zip" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter Credit Card Number :"/></td>
+                        <td><h:inputText id="ccn" value="#{user.cardNum}" required="true"
+                                         requiredMessage="Credit card field should be filled"/></td>
+                        <td><h:message for="ccn" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:commandButton value="Register" action="#{user.add}"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputLink value="home.xhtml">Home</h:outputLink></td>
+                    </tr>
+                </table>
+            </h:form>
+        </f:view>
+    </h:body>
 </html>

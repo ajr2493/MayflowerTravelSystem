@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -20,6 +19,9 @@ public class User {
     private String dbPassword;
     private String dbName;
     private String loggedIn;
+    private String cardNum;
+    private String fname,lname,address,city,state;
+    private int zip;
 
     boolean isLoginPage = (FacesContext.getCurrentInstance().getViewRoot()
             .getViewId().lastIndexOf("login.xhtml") > -1);
@@ -27,8 +29,64 @@ public class User {
     public User() {
     }
 
+    public String getFname() {
+        return fname;
+    }
+
+    public void setFname(String fname) {
+        this.fname = fname;
+    }
+
+    public String getLname() {
+        return lname;
+    }
+
+    public void setLname(String lname) {
+        this.lname = lname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public int getZip() {
+        return zip;
+    }
+
+    public void setZip(int zip) {
+        this.zip = zip;
+    }
+
     public String getDbPassword() {
         return dbPassword;
+    }
+
+    public String getCardNum() {
+        return cardNum;
+    }
+
+    public void setCardNum(String cardNum) {
+        this.cardNum = cardNum;
     }
 
     public String getLoggedIn() {
@@ -57,25 +115,64 @@ public class User {
     }
 
     public String add() {
-//        try {
-//		Class.forName("com.mysql.jdbc.Driver");
-//	} catch (ClassNotFoundException e) {
-//		System.out.println("Where is your MySQL JDBC Driver?");
-//		e.printStackTrace();
-//		return "";
-//	}
+        try {
+		Class.forName("com.mysql.jdbc.Driver");
+	} catch (ClassNotFoundException e) {
+		System.out.println("Where is your MySQL JDBC Driver?");
+		e.printStackTrace();
+		return "";
+	}
         int i = 0;
+        int j = 0;
         if (name != null) {
             PreparedStatement ps = null;
+            //prepared statement for max account no
+            PreparedStatement ps2 = null;
+            //prepared statement for person id
+            PreparedStatement ps3 = null;
+            //prepared statement for creating person
+            PreparedStatement ps4 = null;
+            ResultSet rs = null;
             Connection con = null;
             try {
 
                 con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
                 if (con != null) {
-                    String sql = "INSERT INTO customer(email, password) VALUES(?,?)";
+                    String sql = "INSERT INTO customer(email, password, creditcardno,creationdate,rating, accountno, id) VALUES(?,?,?,?,?,?,?)";
                     ps = con.prepareStatement(sql);
                     ps.setString(1, name);
                     ps.setString(2, password);
+                    ps.setString(3, cardNum);
+                    java.util.Date utilDate = new java.util.Date();
+                    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+                    ps.setDate(4, sqlDate);
+                    ps.setInt(5, 0);
+                    
+                    String sql2 = "SELECT MAX(accountno) FROM customer";
+                    ps2 = con.prepareStatement(sql2);
+                    rs = ps2.executeQuery();
+                    rs.next();
+                    int accNo = rs.getInt(1) + 1;
+                    ps.setInt(6, accNo);
+                    
+                    String sql3 = "SELECT MAX(id) FROM person";
+                    ps3 = con.prepareStatement(sql3);
+                    rs = ps3.executeQuery();
+                    rs.next();
+                    int id = rs.getInt(1) + 1;
+                    ps.setInt(7, id);
+                    
+                    //todo create new person row in person table with id
+                    String sql4 = "INSERT INTO person(id,firstname,lastname,address,city,state,zipcode) VALUES(?,?,?,?,?,?,?)";
+                    ps4=con.prepareStatement(sql4);
+                    ps4.setInt(1, id);
+                    ps4.setString(2, fname);
+                    ps4.setString(3, lname);
+                    ps4.setString(4, address);
+                    ps4.setString(5, city);
+                    ps4.setString(6, state);
+                    ps4.setInt(7,zip);
+                    j = ps4.executeUpdate();
                     i = ps.executeUpdate();
                 }
 
@@ -85,12 +182,15 @@ public class User {
                 try {
                     con.close();
                     ps.close();
+                    ps2.close();
+                    ps3.close();
+                    ps4.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        if (i > 0) {
+        if (i > 0 && j>0) {
             return "success";
         } else {
             System.out.println("Unsuccess");
@@ -138,7 +238,7 @@ public class User {
                     .getSessionMap().put("email", name);
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("loggedIn", "valid");
-            
+
             //Save account Number
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("accountNo", 2);
