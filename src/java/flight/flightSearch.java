@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-<<<<<<< HEAD
+
 
 package flight;
 
-import java.util.Date;
-=======
-package flight;
+
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,7 +17,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
->>>>>>> origin/mlavinaBranch
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -33,22 +32,18 @@ public class flightSearch {
     /**
      * Creates a new instance of flightSearch
      */
-<<<<<<< HEAD
-    
-=======
->>>>>>> origin/mlavinaBranch
+
     private String flightFrom;
     private String flightTo;
     private Date departing;
     private Date returning;
-<<<<<<< HEAD
     
     //One-Way, Round-Trip or Multi-Trip
     private String flightDirection;
     public flightSearch() {
     }
 
-=======
+
 
     private static final ArrayList<Flight> flightResults = new ArrayList<Flight>();
 
@@ -57,11 +52,7 @@ public class flightSearch {
     private static Flight selectedFlight;
 
 
-    //One-Way, Round-Trip or Multi-Trip
-    private String flightDirection;
 
-    public flightSearch() {
-    }
 
     public Flight getSelectedFlight() {
         return selectedFlight;
@@ -74,7 +65,7 @@ public class flightSearch {
     public ArrayList<Flight> getFlightResults() {
         return flightResults;
     }
->>>>>>> origin/mlavinaBranch
+
     public String getFlightFrom() {
         return flightFrom;
     }
@@ -107,9 +98,6 @@ public class flightSearch {
         this.returning = returning;
     }
 
-<<<<<<< HEAD
-
-=======
     public void searchOneWayFlights() {
 
         try {
@@ -213,7 +201,6 @@ public class flightSearch {
         }
         return results;
     }
->>>>>>> origin/mlavinaBranch
 
     public String getFlightDirection() {
         return flightDirection;
@@ -222,9 +209,7 @@ public class flightSearch {
     public void setFlightDirection(String flightDirection) {
         this.flightDirection = flightDirection;
     }
-<<<<<<< HEAD
-    
-=======
+
 
     public static class Flight {
         private String airline;
@@ -293,5 +278,5 @@ public class flightSearch {
         
         
     }
->>>>>>> origin/mlavinaBranch
+
 }

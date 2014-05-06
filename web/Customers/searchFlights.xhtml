@@ -7,7 +7,6 @@
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
         <title>Search Flights</title>
-<<<<<<< HEAD
                <script type="text/javascript">
                 if("#{user.loggedIn}"!="valid"){
                     window.location.replace("../error.xhtml");
@@ -15,8 +14,6 @@
 
         </script>
         
-=======
->>>>>>> origin/mlavinaBranch
         <script>
          function testJs(type){
             if(type == "One-Way"){
@@ -40,19 +37,7 @@
             </h:selectOneRadio>
             
             <h:outputLabel value="Flying From " style="font-weight:bold" />
-<<<<<<< HEAD
-            <p:inputText value="#{flightSearch.flightFrom}" pt:placeholder="Enter City or Airport"/>
 
-            <h:outputLabel value="Flying To " style="font-weight:bold" />
-            <p:inputText value="#{flightSearch.flightTo}" pt:placeholder="Enter City or Airport"/>
-
-            <h:outputText value="Departing Time" />
-            <p:calendar value="#{flightSearch.departing}" pattern="MM/dd/yyyy HH:mm" />
-            
-            <div id="returning">
-            <h:outputText value="Returning Time "  />
-            <p:calendar value="#{flightSearch.returning}" pattern="MM/dd/yyyy HH:mm" />
-=======
             <p:autoComplete id="ff" dropdown="true" pt:placeholder="Enter an Airport" value="#{flightSearch.flightFrom}" 
                             completeMethod="#{flightSearch.completeCities()}" />
             
@@ -67,7 +52,6 @@
             <div id="returning">
             <h:outputText value="Returning Time "  />
             <p:calendar value="#{flightSearch.returning}" />
->>>>>>> origin/mlavinaBranch
             </div>
             
             <h:commandButton value="Search" action="flightResults" />
