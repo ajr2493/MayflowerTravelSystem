@@ -138,25 +138,10 @@ public class User {
                     .getSessionMap().put("username", name);
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("loggedIn", "valid");
-//            if (session == null) {
-//                FacesContext
-//                        .getCurrentInstance()
-//                        .getApplication()
-//                        .getNavigationHandler()
-//                        .handleNavigation(FacesContext.getCurrentInstance(),
-//                                null, "/login.xhtml");
-//            } else {
-//                Object currentUser = session.getAttribute("name");
-//                if (!isLoginPage && (currentUser == null || currentUser == "")) {
-//                    FacesContext
-//                            .getCurrentInstance()
-//                            .getApplication()
-//                            .getNavigationHandler()
-//                            .handleNavigation(
-//                                    FacesContext.getCurrentInstance(), null,
-//                                    "/login.xhtml");
-//                }
-//            }
+            
+            //Save account Number
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .getSessionMap().put("accountNo", 2);
             loggedIn = "valid";
             return "valid";
         } else {
@@ -165,8 +150,7 @@ public class User {
     }
 
     public void logout() {
-//        FacesContext.getCurrentInstance().getExternalContext()
-//                .invalidateSession();
+
 //        FacesContext
 //                .getCurrentInstance()
 //                .getApplication()

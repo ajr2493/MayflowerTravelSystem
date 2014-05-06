@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -30,7 +31,8 @@ public class myReservations {
     private static final ArrayList<TableReservation> reservations = new ArrayList<TableReservation>();
 
     
-    private int accountNo = 2;
+    private int accountNo = (Integer) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("accountNo");;
 
 
     public ArrayList<TableReservation> getReservations() {
