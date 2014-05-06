@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
         <title>Customer Home Page</title>
     </h:head>
@@ -15,24 +14,32 @@
                 }
 
         </script>
-        <h:form>
-            <p:panelMenu style ="width:200px">
-                <p:submenu label="Reservations">
-                    <p:menuitem value="My Reservations" outcome="my_reservations"></p:menuitem>
-                </p:submenu>
-                <p:submenu label ="Flights">
-                    <p:menuitem value="Search Flights" outcome="searchFlights"></p:menuitem>
-                    <p:menuitem value="Recommend a Flight" outcome="recommend"></p:menuitem>
-                    <p:menuitem value="Best Selling Flights" outcome="best_selling"></p:menuitem>
-                </p:submenu>
-                <p:submenu label ="Auctions">
-                    <p:menuitem value ="Reverse Auction" outcome ="auction"></p:menuitem>
-                </p:submenu>
-                <p:submenu label="#{user.name}">
-                    <p:menuitem value ="Logout" action="#{user.logout()}" outcome="/home"></p:menuitem>
-                </p:submenu>
-            </p:panelMenu>
-        </h:form>
+        <table>
+            <tr>
+                <td>
+                    <h:button value="Reverse Auction" outcome="auction"></h:button>
+                </td>
+                <td>
+                    <h:button value="My Reservations" outcome="my_reservations"></h:button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h:button value="Recommend a Flight" outcome="recommend"></h:button>
+                </td>
+                <td>
+                    <h:button value="Best Selling Flights" outcome="best_selling"></h:button>
+                </td>
+                <td>
+                    <h:button value="Search Flights" outcome="searchFlights"></h:button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h:form><h:commandButton value="Logout" action="#{user.logout()}" /></h:form>
+                </td>
+            </tr>
+        </table>
     </h:body>
 </html>
 
