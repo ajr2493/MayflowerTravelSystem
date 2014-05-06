@@ -72,7 +72,7 @@ public class User {
 
                 con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
                 if (con != null) {
-                    String sql = "INSERT INTO users(username, password) VALUES(?,?)";
+                    String sql = "INSERT INTO customer(email, password) VALUES(?,?)";
                     ps = con.prepareStatement(sql);
                     ps.setString(1, name);
                     ps.setString(2, password);
@@ -114,12 +114,12 @@ public class User {
             try {
                 con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
                 if (con != null) {
-                    String sql = "select username,password from users where username = '"
+                    String sql = "select email,password from customer where email = '"
                             + uName + "'";
                     ps = con.prepareStatement(sql);
                     rs = ps.executeQuery();
                     rs.next();
-                    dbName = rs.getString("username");
+                    dbName = rs.getString("Email");
                     dbPassword = rs.getString("password");
                 }
             } catch (SQLException sqle) {
@@ -135,7 +135,7 @@ public class User {
                 .getExternalContext().getSession(false);
         if (isLoginPage && (name.equals(dbName) && password.equals(dbPassword))) {
             FacesContext.getCurrentInstance().getExternalContext()
-                    .getSessionMap().put("username", name);
+                    .getSessionMap().put("email", name);
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("loggedIn", "valid");
             
