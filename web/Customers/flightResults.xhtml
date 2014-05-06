@@ -21,7 +21,8 @@
                          selection="#{flightSearch.selectedFlight}" rowKey="#{flight.UID}" selectionMode="single">
 
                 <f:facet name="header">
-                    Click "Buy" button after selecting a row to reserve the flight
+                    Click "Reserve" button after selecting a row to reserve the flight at current price<br />
+                    Click "Auction" button after selecting to name your own price
                 </f:facet>
 
                 <p:column headerText="Airline">
@@ -35,13 +36,22 @@
                 <p:column headerText="Departure Time" >
                     #{flight.deptTime}
                 </p:column>
+                
+                <p:column headerText="Departure From" >
+                    #{flight.deptAirport}
+                </p:column>
+                
+                <p:column headerText="Class" >
+                    #{flight.seatClass}
+                </p:column>
 
                 <p:column headerText="Fare">
                     #{flight.fare}
                 </p:column>
 
                 <f:facet name="footer">
-                    <p:commandButton id="viewButton" value="Buy" icon="ui-icon-search"/>
+                    <p:commandButton id="reserveButton" value="Reserve" action="reserveFlight" icon="ui-icon-search"/>
+                    <p:commandButton id="auctionButton" value="Auction" action="auction" icon="ui-icon-search"/>
                 </f:facet>
             </p:dataTable>
 

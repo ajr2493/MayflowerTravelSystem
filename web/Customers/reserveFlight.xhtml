@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Make a Reservation</title>
+    </h:head>
+    <h:body>
+               <script type="text/javascript">
+                if("#{user.loggedIn}"!="valid"){
+                    window.location.replace("../error.xhtml");
+                }
+                function reserveTicket(){
+                    #{flightSearch.reserveOneWayTicket()}
+                }
+
+        </script>
+        
+        Make a Reservation
+        <h:form>
+            <h:outputLabel value="Seat Preference " style="font-weight:bold" />
+            <p:autoComplete dropdown="true" pt:placeholder="Enter a Seat Preference" value="#{flightSearch.seatPreference}" 
+                            completeMethod="#{flightSearch.seatPreferences()}" />
+            
+            <h:outputLabel value="Choose a Seat" style="font-weight:bold" />
+            <p:autoComplete dropdown="true" pt:placeholder="Enter a Seat" value="#{flightSearch.seatNo}" 
+                            completeMethod="#{flightSearch.seatChoices()}" />
+            
+            <h:outputLabel value="Meal Preference " style="font-weight:bold" />
+            <p:autoComplete dropdown="true" pt:placeholder="Enter a Meal Preference" value="#{flightSearch.mealPreference}" 
+                            completeMethod="#{flightSearch.mealPreferences()}" />
+            
+            <h:outputLabel value="Employee SSN. Leave Blank if you did this on your own " style="font-weight:bold" />
+            <p:inputText value="#{flightSearch.employeeSSN}" />
+            
+            <h:button value="Confirm" outcome="main" onclick="reserveTicket()"></h:button>
+        </h:form>
+    </h:body>
+</html>
+

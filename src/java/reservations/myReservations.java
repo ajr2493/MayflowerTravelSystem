@@ -32,7 +32,7 @@ public class myReservations {
 
     
     private int accountNo = (Integer) FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap().get("accountNo");;
+                .getSessionMap().get("accountNo");
 
 
     public ArrayList<TableReservation> getReservations() {

@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -37,19 +38,229 @@ public class flightSearch {
     private String flightTo;
     private Date departing;
     private Date returning;
+    private int employeeSSN;
+    private int accountNo = (Integer) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("accountNo");
+    
+    private int personID = (Integer) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("personID");
+    
+    private int seatNo;
+    private String seatPreference;
+    private String mealPreference;
     
     //One-Way, Round-Trip or Multi-Trip
-    private String flightDirection;
+    private String flightDirection = "Round-Trip";
+    
+    //Seat Preferences
+    public List<String> seatPreferences(){
+        List<String> preference = new ArrayList<String>();
+        preference.add("Aisle Seat");
+        preference.add("Window Seat");
+        return preference;
+    }
+    
+    public List<String> mealPreferences(){
+        List<String> preference = new ArrayList<String>();
+        preference.add("Chicken");
+        preference.add("Beef");
+        preference.add("Seafood");
+        preference.add("Vegetarian");
+        preference.add("Vegan");
+        preference.add("No Food");
+        return preference;
+    }
+    
+    /*Get a list of available seats*/
+    public List<Integer> seatChoices(){
+        List<Integer> availableSeats = new ArrayList<Integer>();
+         try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        List<Integer> takenSeats = new ArrayList<Integer>();
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+
+                String sql = "SELECT SeatNo \n" +
+                             "FROM includes I, reservationpassenger R\n" +
+                             "WHERE R.ResrNo = I.ResrNo AND I.FlightNo = ? ";
+                
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, selectedFlight.flightNo);
+
+                ps.execute();
+                rs = ps.getResultSet();
+                while(rs.next()){
+                     takenSeats.add(rs.getInt("SeatNo"));
+                }
+                
+                sql = "SELECT NoOfSeats \n" +
+                      "FROM flight f, airline A\n" +
+                      "WHERE f.FlightNo = ? AND f.AirlineID= A.Id AND A.name = ?";
+                
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, selectedFlight.flightNo);
+                ps.setString(2, selectedFlight.airline);
+                ps.execute();
+                rs = ps.getResultSet();
+                if(rs.next()){
+                    for(int i = rs.getInt("NoOfSeats"); i > 0 ; i--){
+                       if(takenSeats.contains(i)){
+                           continue;
+                       }
+                       else{
+                           availableSeats.add(i);
+                       }
+                    }
+                }
+                
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return availableSeats;
+    }
     public flightSearch() {
     }
 
 
+    /**
+     * Reserve Tickets
+     */
+    public void reserveOneWayTicket(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
 
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                int resrNo = 555;
+                String sql ="INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
+                
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, resrNo);
+                ps.setTimestamp(2, new java.sql.Timestamp(new Date().getTime()));
+                ps.setDouble(3, (selectedFlight.fare * .10));
+                ps.setDouble(4, selectedFlight.fare);
+                ps.setInt(5, 0);
+                ps.setInt(6, accountNo);
+
+                System.out.println(ps);
+                
+                ps.execute();
+                
+                sql = "INSERT INTO Includes VALUES (?, ?, ?, ?, ?);";
+                
+                ps = con.prepareStatement(sql);
+                
+                ps.setInt(1, resrNo);
+                ps.setString(2, selectedFlight.airlineID);
+                ps.setInt(3, selectedFlight.flightNo);
+                ps.setInt(4, selectedFlight.legNo);
+                ps.setDate(5, new java.sql.Date(selectedFlight.deptTime.getTime()));
+                
+                
+                System.out.println(ps);
+                
+                ps.execute();
+                
+                sql = "INSERT INTO ReservationPassenger VALUES(?, ?, ?, ?, ?, ?);";
+                
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, resrNo);
+                ps.setInt(2, personID);
+                ps.setInt(3, accountNo);
+                ps.setString(4, (""+seatNo));
+                ps.setString(5, selectedFlight.seatClass);
+                ps.setString(6, mealPreference);
+                
+                System.out.println(mealPreference);
+                System.out.println(ps);
+                
+                ps.execute();
+
+                
+                
+                
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+ 
     private static final ArrayList<Flight> flightResults = new ArrayList<Flight>();
 
   
     
+    
     private static Flight selectedFlight;
+
+    public int getEmployeeSSN() {
+        return employeeSSN;
+    }
+
+    public void setEmployeeSSN(int employeeSSN) {
+        this.employeeSSN = employeeSSN;
+    }
+
+    public int getSeatNo() {
+        return seatNo;
+    }
+
+    public void setSeatNo(int seatNo) {
+        this.seatNo = seatNo;
+    }
+
+    public String getSeatPreference() {
+        return seatPreference;
+    }
+
+    public void setSeatPreference(String seatPreference) {
+        this.seatPreference = seatPreference;
+    }
+
+    public String getMealPreference() {
+        return mealPreference;
+    }
+
+    public void setMealPreference(String mealPreference) {
+        this.mealPreference = mealPreference;
+    }
 
 
 
@@ -110,14 +321,13 @@ public class flightSearch {
         PreparedStatement ps = null;
         Connection con = null;
         ResultSet rs;
-        List<String> results = new ArrayList<String>();
         try {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
-                String sql = "Create OR Replace view SearchResults(Name, FlightNo, DepTime, ArrTime, DepAirportID, ArrAirportID, LegNo, Class, fare)\n"
+                String sql = "Create OR Replace view SearchResults(Name, FlightNo, DepTime, ArrTime, DepAirportID, ArrAirportID, LegNo, Class, fare, AirlineID)\n"
                         + "as\n"
-                        + "SELECT DISTINCT R.Name, L.FlightNo, L.DepTime, L.ArrTime, L.DepAirportId, L.ArrAirportId, L.LegNo, M.Class, M.Fare\n"
+                        + "SELECT DISTINCT R.Name, L.FlightNo, L.DepTime, L.ArrTime, L.DepAirportId, L.ArrAirportId, L.LegNo, M.Class, M.Fare, L.AirlineID\n"
                         + "FROM Flight F, Leg L, Airport A , Fare M, Airline R\n"
                         + "WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo \n"
                         + " AND (L.DepAirportId = ? OR L.ArrAirportId = ?) AND M.AirlineID = L.AirlineID \n"
@@ -130,7 +340,7 @@ public class flightSearch {
                 ps.setDate(4, new java.sql.Date(departing.getTime() + + (1000 * 60 * 60 * 24)));
                 ps.execute();
 
-                sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, B.ArrAirportID\n" +
+                sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, A.LegNo, A.AirlineID, B.ArrAirportID\n" +
                       "From searchresults A, searchresults B\n" +
                       "Where ((A.ArrAirportID = B.DepAirportID) OR (A.DepAirportID = ? AND B.ArrAirportID = ?))";
                 
@@ -143,10 +353,12 @@ public class flightSearch {
                 int i = 0;
                 while(rs.next()){
                     //flightResults.add()
-                    flightResults.add(new Flight(rs.getString("Name"), rs.getString("FlightNo"), rs.getDate("DepTime"), rs.getDate("ArrTime"), 
-                             rs.getString("Class"), rs.getDouble("fare"),rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i));
+                    flightResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getDate("DepTime"), rs.getDate("ArrTime"), 
+                             rs.getString("Class"), rs.getDouble("fare"),rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
                     i++;
                 }
+                
+                
             }
 
         } catch (Exception e) {
@@ -213,7 +425,8 @@ public class flightSearch {
 
     public static class Flight {
         private String airline;
-        private String flightNo;
+        private String airlineID;
+        private int flightNo;
         private Date deptTime;
         private Date arrTime;
         private String seatClass;
@@ -221,12 +434,13 @@ public class flightSearch {
         private String deptAirport;
         private String arrAirport;
         private int UID;
+        private int legNo;
         
         public String getAirline() {
             return airline;
         }
 
-        public String getFlightNo() {
+        public int getFlightNo() {
             return flightNo;
         }
 
@@ -262,10 +476,15 @@ public class flightSearch {
             this.UID = UID;
         }
 
+        public int getLegNo() {
+            return legNo;
+        }
+
         
 
-        public Flight(String airline, String flightNo, java.sql.Date deptTime, java.sql.Date arrTime, String seatClass, double fare, String deptAirport, String arrAirport, int UID) {
+        public Flight(String airlineID, String airline, int flightNo, java.sql.Date deptTime, java.sql.Date arrTime, String seatClass, double fare, String deptAirport, String arrAirport, int UID, int legNo) {
             this.airline = airline;
+            this.airlineID = airlineID;
             this.flightNo = flightNo;
             this.deptTime = new Date(deptTime.getTime());
             this.arrTime = new Date(arrTime.getTime());
@@ -274,6 +493,7 @@ public class flightSearch {
             this.deptAirport = deptAirport;
             this.arrAirport = arrAirport;
             this.UID = UID;
+            this.legNo = legNo;
         }
         
         

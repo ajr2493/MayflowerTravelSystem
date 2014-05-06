@@ -242,6 +242,9 @@ public class User {
             //Save account Number
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("accountNo", 2);
+            
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .getSessionMap().put("personID", 2);
             loggedIn = "valid";
             return "valid";
         } else {
