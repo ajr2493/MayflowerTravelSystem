@@ -161,8 +161,19 @@ public class flightSearch {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
-                int resrNo = 555;
-                String sql ="INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
+                String sql = "SELECT max(ResrNo) FROM reservation;";
+                ps = con.prepareStatement(sql);
+                
+                ps.execute();
+                rs = ps.getResultSet();
+                int resrNo = -1;
+                
+                if(rs.next()){
+                    resrNo = rs.getInt(1) + 1;
+                }
+              
+                
+                sql ="INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
                 
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, resrNo);
