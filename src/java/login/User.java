@@ -20,7 +20,7 @@ public class User {
     private String dbName;
     private String loggedIn;
     private String cardNum;
-    private String fname,lname,address,city,state;
+    private String fname, lname, address, city, state;
     private int zip;
 
     boolean isLoginPage = (FacesContext.getCurrentInstance().getViewRoot()
@@ -116,12 +116,12 @@ public class User {
 
     public String add() {
         try {
-		Class.forName("com.mysql.jdbc.Driver");
-	} catch (ClassNotFoundException e) {
-		System.out.println("Where is your MySQL JDBC Driver?");
-		e.printStackTrace();
-		return "";
-	}
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+            return "";
+        }
         int i = 0;
         int j = 0;
         if (name != null) {
@@ -147,31 +147,31 @@ public class User {
                     java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
                     ps.setDate(4, sqlDate);
                     ps.setInt(5, 0);
-                    
+
                     String sql2 = "SELECT MAX(accountno) FROM customer";
                     ps2 = con.prepareStatement(sql2);
                     rs = ps2.executeQuery();
                     rs.next();
                     int accNo = rs.getInt(1) + 1;
                     ps.setInt(6, accNo);
-                    
+
                     String sql3 = "SELECT MAX(id) FROM person";
                     ps3 = con.prepareStatement(sql3);
                     rs = ps3.executeQuery();
                     rs.next();
                     int id = rs.getInt(1) + 1;
                     ps.setInt(7, id);
-                    
+
                     //todo create new person row in person table with id
                     String sql4 = "INSERT INTO person(id,firstname,lastname,address,city,state,zipcode) VALUES(?,?,?,?,?,?,?)";
-                    ps4=con.prepareStatement(sql4);
+                    ps4 = con.prepareStatement(sql4);
                     ps4.setInt(1, id);
                     ps4.setString(2, fname);
                     ps4.setString(3, lname);
                     ps4.setString(4, address);
                     ps4.setString(5, city);
                     ps4.setString(6, state);
-                    ps4.setInt(7,zip);
+                    ps4.setInt(7, zip);
                     j = ps4.executeUpdate();
                     i = ps.executeUpdate();
                 }
@@ -190,7 +190,7 @@ public class User {
                 }
             }
         }
-        if (i > 0 && j>0) {
+        if (i > 0 && j > 0) {
             return "success";
         } else {
             System.out.println("Unsuccess");
@@ -239,12 +239,34 @@ public class User {
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("loggedIn", "valid");
 
-            //Save account Number
-            FacesContext.getCurrentInstance().getExternalContext()
-                    .getSessionMap().put("accountNo", 2);
+            PreparedStatement ps = null;
+            Connection con = null;
+            ResultSet rs = null;
+            int personID = 0;
+            int accountNo = 0;
+            //get account number and personid from database
+            try {
+                con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+                if (con != null) {
+                    String sql = "select id,accountNo from customer where email = '"
+                            + name + "'";
+                    ps = con.prepareStatement(sql);
+                    rs = ps.executeQuery();
+                    rs.next();
+                    personID = rs.getInt(1);
+                    accountNo=rs.getInt(2);
+                }
+            } catch (SQLException sqle) {
+                sqle.printStackTrace();
+            }
             
+            
+            //Save account Number in session scope
             FacesContext.getCurrentInstance().getExternalContext()
-                    .getSessionMap().put("personID", 2);
+                    .getSessionMap().put("accountNo", accountNo);
+            //save personid in session scope
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .getSessionMap().put("personID", personID);
             loggedIn = "valid";
             return "valid";
         } else {
