@@ -1,6 +1,5 @@
 package login;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -31,8 +30,10 @@ public class User {
     public String getDbPassword() {
         return dbPassword;
     }
-    public String getLoggedIn(){
-        return loggedIn;
+
+    public String getLoggedIn() {
+        return (String) FacesContext.getCurrentInstance().getExternalContext()
+                .getSessionMap().get("loggedIn");
     }
 
     public String getDbName() {
@@ -99,12 +100,12 @@ public class User {
 
     public void dbData(String uName) {
         try {
-		Class.forName("com.mysql.jdbc.Driver");
-	} catch (ClassNotFoundException e) {
-		System.out.println("Where is your MySQL JDBC Driver?");
-		e.printStackTrace();
-		
-	}
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
         if (uName != null) {
             PreparedStatement ps = null;
             Connection con = null;
@@ -135,26 +136,28 @@ public class User {
         if (isLoginPage && (name.equals(dbName) && password.equals(dbPassword))) {
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("username", name);
-            if (session == null) {
-                FacesContext
-                        .getCurrentInstance()
-                        .getApplication()
-                        .getNavigationHandler()
-                        .handleNavigation(FacesContext.getCurrentInstance(),
-                                null, "/login.xhtml");
-            } else {
-                Object currentUser = session.getAttribute("name");
-                if (!isLoginPage && (currentUser == null || currentUser == "")) {
-                    FacesContext
-                            .getCurrentInstance()
-                            .getApplication()
-                            .getNavigationHandler()
-                            .handleNavigation(
-                                    FacesContext.getCurrentInstance(), null,
-                                    "/login.xhtml");
-                }
-            }
-            loggedIn="valid";
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .getSessionMap().put("loggedIn", "valid");
+//            if (session == null) {
+//                FacesContext
+//                        .getCurrentInstance()
+//                        .getApplication()
+//                        .getNavigationHandler()
+//                        .handleNavigation(FacesContext.getCurrentInstance(),
+//                                null, "/login.xhtml");
+//            } else {
+//                Object currentUser = session.getAttribute("name");
+//                if (!isLoginPage && (currentUser == null || currentUser == "")) {
+//                    FacesContext
+//                            .getCurrentInstance()
+//                            .getApplication()
+//                            .getNavigationHandler()
+//                            .handleNavigation(
+//                                    FacesContext.getCurrentInstance(), null,
+//                                    "/login.xhtml");
+//                }
+//            }
+            loggedIn = "valid";
             return "valid";
         } else {
             return "invalid";
@@ -162,14 +165,16 @@ public class User {
     }
 
     public void logout() {
+//        FacesContext.getCurrentInstance().getExternalContext()
+//                .invalidateSession();
+//        FacesContext
+//                .getCurrentInstance()
+//                .getApplication()
+//                .getNavigationHandler()
+//                .handleNavigation(FacesContext.getCurrentInstance(), null,
+//                        "/login.xhtml");
+        loggedIn = "";
         FacesContext.getCurrentInstance().getExternalContext()
-                .invalidateSession();
-        FacesContext
-                .getCurrentInstance()
-                .getApplication()
-                .getNavigationHandler()
-                .handleNavigation(FacesContext.getCurrentInstance(), null,
-                        "/login.xhtml");
-        loggedIn="";
+                .getSessionMap().put("loggedIn", "");
     }
 }

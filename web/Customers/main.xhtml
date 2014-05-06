@@ -9,7 +9,7 @@
         <script type="text/javascript">
            
                 if("#{user.loggedIn}"!="valid"){
-                    window.location.replace("../error.xhtml");
+                    window.location.replace("../login.xhtml");
                   
                 }
 
@@ -39,7 +39,7 @@
             </tr>
             <tr>
                 <td>
-                    <h:form><h:commandButton value="Logout" action="#{user.logout()}"/></h:form>
+                    <h:form><h:commandButton value="Logout" action="#{user.logout()}" /></h:form>
                 </td>
             </tr>
         </table>
