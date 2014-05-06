@@ -1,11 +1,18 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
+<<<<<<< HEAD
       xmlns:h="http://xmlns.jcp.org/jsf/html">
+=======
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+>>>>>>> origin/mlavinaBranch
     <h:head>
         <title>Facelet Title</title>
     </h:head>
     <h:body>
+<<<<<<< HEAD
                 <script type="text/javascript">
            
                 if("#{user.loggedIn}"!="valid"){
@@ -17,6 +24,39 @@
         
         <h1>#{flightSearch.flightFrom}</h1>
            <h1>#{flightSearch.flightTo}</h1>
+=======
+        #{flightSearch.searchOneWayFlights()}
+        <h:form>
+            <p:dataTable id="cars" var="flight" value="#{flightSearch.flightResults}" 
+                         selection="#{flightSearch.selectedFlight}" rowKey="#{flight.UID}" selectionMode="single">
+
+                <f:facet name="header">
+                    Click "Buy" button after selecting a row to reserve the flight
+                </f:facet>
+
+                <p:column headerText="Airline">
+                    #{flight.airline}
+                </p:column>
+
+                <p:column headerText="Flight No.">
+                    #{flight.flightNo}
+                </p:column>
+
+                <p:column headerText="Departure Time" >
+                    #{flight.deptTime}
+                </p:column>
+
+                <p:column headerText="Fare">
+                    #{flight.fare}
+                </p:column>
+
+                <f:facet name="footer">
+                    <p:commandButton id="viewButton" value="Buy" icon="ui-icon-search"/>
+                </f:facet>
+            </p:dataTable>
+
+        </h:form>
+>>>>>>> origin/mlavinaBranch
     </h:body>
 </html>
 
