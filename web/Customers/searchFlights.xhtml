@@ -7,20 +7,43 @@
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
         <title>Search Flights</title>
+        <script>
+         function testJs(type){
+            if(type == "One-Way"){
+                document.getElementById("returning").style.display = "none";
+            }
+            else{
+                document.getElementById("returning").style.display = "block";
+            }
+             
+         }
+        </script>
+          
     </h:head>
     <h:body>
+        
         <h:form>
-            <h:selectOneRadio value="#{flightSearch.flightDirection}">
-                <f:selectItem itemValue="One-Way" itemLabel="One-Way" />
+            <h:selectOneRadio value="#{flightSearch.flightDirection}" onclick="testJs(value)">
                 <f:selectItem itemValue="Round-Trip" itemLabel="Round-Trip" />
+                <f:selectItem itemValue="One-Way" itemLabel="One-Way" />
                 <f:selectItem itemValue="Multi-Trip" itemLabel="Multi-Trip" />
             </h:selectOneRadio>
+            
             <h:outputLabel value="Flying From " style="font-weight:bold" />
             <p:inputText value="#{flightSearch.flightFrom}" pt:placeholder="Enter City or Airport"/>
-            
+
             <h:outputLabel value="Flying To " style="font-weight:bold" />
-            <h:inputText value="#{flightSearch.flightTo}"></h:inputText>
-            <h:commandButton value="Submit" action="flightResults" />
+            <p:inputText value="#{flightSearch.flightTo}" pt:placeholder="Enter City or Airport"/>
+
+            <h:outputText value="Departing Time" />
+            <p:calendar value="#{flightSearch.departing}" pattern="MM/dd/yyyy HH:mm" />
+            
+            <div id="returning">
+            <h:outputText value="Returning Time "  />
+            <p:calendar value="#{flightSearch.returning}" pattern="MM/dd/yyyy HH:mm" />
+            </div>
+            
+            <h:commandButton value="Search" action="flightResults" />
         </h:form>
     </h:body>
 </html>

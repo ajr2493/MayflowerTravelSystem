@@ -6,7 +6,7 @@
 
 package flight;
 
-import java.sql.Date;
+import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -25,7 +25,7 @@ public class flightSearch {
     private String flightFrom;
     private String flightTo;
     private Date departing;
-    private Date arriving;
+    private Date returning;
     
     //One-Way, Round-Trip or Multi-Trip
     private String flightDirection;
@@ -56,13 +56,15 @@ public class flightSearch {
         this.departing = departing;
     }
 
-    public Date getArriving() {
-        return arriving;
+    public Date getReturning() {
+        return returning;
     }
 
-    public void setArriving(Date arriving) {
-        this.arriving = arriving;
+    public void setReturning(Date returning) {
+        this.returning = returning;
     }
+
+
 
     public String getFlightDirection() {
         return flightDirection;
