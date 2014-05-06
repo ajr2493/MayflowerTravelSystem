@@ -20,6 +20,7 @@ public class User {
     private String password;
     private String dbPassword;
     private String dbName;
+    private String loggedIn;
 
     boolean isLoginPage = (FacesContext.getCurrentInstance().getViewRoot()
             .getViewId().lastIndexOf("login.xhtml") > -1);
@@ -29,6 +30,9 @@ public class User {
 
     public String getDbPassword() {
         return dbPassword;
+    }
+    public String getLoggedIn(){
+        return loggedIn;
     }
 
     public String getDbName() {
@@ -150,6 +154,7 @@ public class User {
                                     "/login.xhtml");
                 }
             }
+            loggedIn="valid";
             return "valid";
         } else {
             return "invalid";
@@ -165,5 +170,6 @@ public class User {
                 .getNavigationHandler()
                 .handleNavigation(FacesContext.getCurrentInstance(), null,
                         "/login.xhtml");
+        loggedIn="";
     }
 }

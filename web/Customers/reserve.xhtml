@@ -6,6 +6,13 @@
         <title>Make a Reservation</title>
     </h:head>
     <h:body>
+               <script type="text/javascript">
+                if("#{user.loggedIn}"!="valid"){
+                    window.location.replace("../error.xhtml");
+                }
+
+        </script>
+        
         Make a Reservation
     </h:body>
 </html>
