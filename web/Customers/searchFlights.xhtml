@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Search Flights</title>
+        <script>
+         function testJs(type){
+            if(type == "One-Way"){
+                document.getElementById("returning").style.display = "none";
+            }
+            else{
+                document.getElementById("returning").style.display = "block";
+            }
+             
+         }
+        </script>
+          
+    </h:head>
+    <h:body>
+        
+        <h:form>
+            <h:selectOneRadio value="#{flightSearch.flightDirection}" onclick="testJs(value)">
+                <f:selectItem itemValue="Round-Trip" itemLabel="Round-Trip" />
+                <f:selectItem itemValue="One-Way" itemLabel="One-Way" />
+                <f:selectItem itemValue="Multi-Trip" itemLabel="Multi-Trip" />
+            </h:selectOneRadio>
+            
+            <h:outputLabel value="Flying From " style="font-weight:bold" />
+            <p:autoComplete id="ff" dropdown="true" pt:placeholder="Enter an Airport" value="#{flightSearch.flightFrom}" 
+                            completeMethod="#{flightSearch.completeCities()}" />
+            
+            
+            <h:outputLabel value="Flying To " style="font-weight:bold" />
+            <p:autoComplete id="ft" dropdown="true" pt:placeholder="Enter an Airport" value="#{flightSearch.flightTo}" 
+                            completeMethod="#{flightSearch.completeCities()}" />
+
+            <h:outputText value="Departing Time" />
+            <p:calendar value="#{flightSearch.departing}"  />
+            
+            <div id="returning">
+            <h:outputText value="Returning Time "  />
+            <p:calendar value="#{flightSearch.returning}" />
+            </div>
+            
+            <h:commandButton value="Search" action="flightResults" />
+        </h:form>
+    </h:body>
+</html>
+
