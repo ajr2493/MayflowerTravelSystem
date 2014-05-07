@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class User {
 
-    private String name;
+    private static String name;
     private String password;
     private String dbPassword;
     private String dbName;
