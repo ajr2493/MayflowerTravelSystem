@@ -8,13 +8,6 @@
     <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
     <param-value>.xhtml</param-value>
 </context-param>
-<login-config>
-    <auth-method>FORM</auth-method>
-    <form-login-config>
-        <form-login-page>/login.xhtml</form-login-page>
-        <form-error-page>/error.xhtml</form-error-page>
-    </form-login-config>
-</login-config>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>

@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title></title>
     </h:head>
@@ -16,39 +17,38 @@
         
         <h1> Your Reservations </h1>
         #{myReservations.myReservations()}
-        <h:dataTable value="#{myReservations.reservations}" var="o"
+        <p:dataTable value="#{myReservations.reservations}" var="o"
     			styleClass="reservation-table"
-    			headerClass="reservation-table-header"
-    			rowClasses="reservation-table-odd-row,reservation-table-even-row"
+    			
     		>
  
-    			<h:column>
+    			<p:column>
     				<!-- column header -->
     				<f:facet name="header">Reservation Numbers</f:facet>
     				<!-- row record -->
                                 #{o.resrNo}
-    			</h:column>
+    			</p:column>
  
-    			<h:column>
+    			<p:column>
     				<f:facet name="header">Reservation Date</f:facet>
     				#{o.resrDate}
-    			</h:column>
+    			</p:column>
  
-    			<h:column>
+    			<p:column>
     				<f:facet name="header">Booking Fee</f:facet>
     				#{o.bookingFee}
-    			</h:column>
+    			</p:column>
  
-    			<h:column>
+    			<p:column>
     				<f:facet name="header">Total Fare</f:facet>
     				#{o.totalFare}
-    			</h:column>
+    			</p:column>
  
-                            			<h:column>
+                            			<p:column>
                         <f:facet name="header">Representative's SSN</f:facet>
     				#{o.repSSN}
-    			</h:column>
-    		</h:dataTable>
+    			</p:column>
+    		</p:dataTable>
  
     </h:body>
 </html>

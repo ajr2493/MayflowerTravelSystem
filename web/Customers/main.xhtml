@@ -8,9 +8,9 @@
     </h:head>
     <h:body>
         <script type="text/javascript">
-           
-                if("#{user.loggedIn}"!="valid"){
-                    window.location.replace("../login.xhtml");
+                console.log(#{user.loggedIn});
+                if("#{user.loggedIn}"!=="valid"){
+                    window.location.replace("../error.xhtml");
                   
                 }
 
@@ -29,7 +29,7 @@
                     <p:menuitem value ="Reverse Auction" outcome ="auction"></p:menuitem>
                 </p:submenu>
                 <p:submenu label="#{user.name}">
-                    <p:menuitem value ="Logout" action="#{user.logout()}" outcome="/home"></p:menuitem>
+                    <p:menuitem value ="Logout" outcome="/home"></p:menuitem>
                 </p:submenu>
             </p:panelMenu>
         </h:form>
