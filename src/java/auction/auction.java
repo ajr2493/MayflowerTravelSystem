@@ -167,7 +167,7 @@ public class auction {
             if (con != null) {
                 con.setAutoCommit(false);
                 try {
-                    String sql = "SELECT * FROM mlavina.auctions where AccountNo = ?;";
+                    String sql = "SELECT distinct AirlineID, FlightNo,Class from mlavina.auctions where AccountNo = ?;";
                     ps = con.prepareStatement(sql);
                     ps.setInt(1, accountNo);
                     ps.execute();

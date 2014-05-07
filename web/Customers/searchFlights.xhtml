@@ -24,6 +24,7 @@
                     document.getElementById("oneWay").style.display = "block";
                     document.getElementById("middleFlight").style.display = "none";
                     document.getElementById("multiTrip").style.display = "none";
+                     document.getElementById("j_idt5:secondTime").innerHTML = "Returning Time";
                 }
                 else if(type == "Round-Trip") {
                     document.getElementById("returning").style.display = "block";
@@ -31,6 +32,7 @@
                     document.getElementById("oneWay").style.display = "none";
                     document.getElementById("middleFlight").style.display = "none";
                     document.getElementById("multiTrip").style.display = "none";
+                    document.getElementById("j_idt5:secondTime").innerHTML = "Returning Time";
                 }
                 else{
                     document.getElementById("returning").style.display = "block";
@@ -40,6 +42,7 @@
                     document.getElementById("multiTrip").style.display = "block";
                     document.getElementById("roundTrip").style.display = "none";
                     document.getElementById("oneWay").style.display = "none";
+                    document.getElementById("j_idt5:secondTime").innerHTML = "Second Departure Time";
                 }
 
             }
@@ -78,7 +81,7 @@
             </h:panelGrid>
             <div id="returning">
                 <h:panelGrid id="grid2" columns="2" style="margin-bottom:15px">
-                    <h:outputText value="Returning Time "  />
+                    <h:outputText id="secondTime" value="Returning Time "  />
                     <p:calendar value="#{flightSearch.returning}" />
                 </h:panelGrid>
             </div>
