@@ -16,8 +16,9 @@
 
         </script>
         #{flightSearch.searchOneWayFlights()}
-        <h:form>
-            <p:dataTable id="cars" var="flight" value="#{flightSearch.flightResults}" 
+       
+        <h:form id="form">
+            <p:dataTable id="flight" var="flight" value="#{flightSearch.flightResults}" 
                          selection="#{flightSearch.selectedFlight}" rowKey="#{flight.UID}" selectionMode="single">
 
                 <f:facet name="header">
@@ -56,7 +57,7 @@
 
                 <f:facet name="footer">
                     <p:commandButton id="reserveButton" value="Reserve" action="reserveFlight" icon="ui-icon-search"/>
-                    <p:commandButton id="auctionButton" value="Auction" action="auction" icon="ui-icon-search"/>
+                    <p:commandButton id="auctionButton" value="Auction" action="auction"   icon="ui-icon-search"/>
                 </f:facet>
             </p:dataTable>
 
