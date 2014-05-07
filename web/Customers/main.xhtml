@@ -8,10 +8,10 @@
     </h:head>
     <h:body>
         <script type="text/javascript">
-                console.log(#{user.loggedIn});
-                if("#{user.loggedIn}"!=="valid"){
-                    window.location.replace("../error.xhtml");
-                }
+            console.log(#{user.loggedIn});
+            if ("#{user.loggedIn}" !== "valid") {
+                window.location.replace("../error.xhtml");
+            }
 
         </script>
         <h:form>
@@ -27,6 +27,9 @@
                 </p:submenu>
                 <p:submenu label ="Auctions">
                     <p:menuitem value ="Reverse Auction" outcome ="auctionList"></p:menuitem>
+                </p:submenu>
+                <p:submenu label ="Help">
+                    <p:menuitem value="User Guide" outcome="/userguide"></p:menuitem>
                 </p:submenu>
                 <p:submenu label="#{user.name}">
                     <p:menuitem value ="Logout" outcome="/home"></p:menuitem>

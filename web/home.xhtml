@@ -1,23 +1,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-<title>Home Page</title>
-<script type="text/javascript">
-    #{user.logout()};
-</script>
-</h:head>
-<h:body>
-<h3>Mayflower Reservations</h3>
-<table frame="box" border="1">
-<tr>
-<td width ="75"><center><h:outputLink value="login.xhtml">Sign In</h:outputLink></center></td>
-<td width ="75"><center><h:outputLink value="register.xhtml">Sign Up</h:outputLink></center></td>
-</tr>
-</table>
-</h:body>
+    <h:head>
+        <title>Home Page</title>
+        <script type="text/javascript">
+            #{user.logout()};
+        </script>
+    </h:head>
+    <h:body>
+        <center><h2>Mayflower Reservations</h2></center>
+        <center><table frame="box" border="1">
+            <tr>
+                <td width ="75"><center><h:outputLink value="login.xhtml">Sign In</h:outputLink></center></td>
+                <td width ="75"><center><h:outputLink value="register.xhtml">Sign Up</h:outputLink></center></td>
+            </tr>
+            
+            
+           
+            </table></center><br/>
+        <center><h:outputLink value="userguide.xhtml">User Guide</h:outputLink></center>
+    </h:body>
 </html>

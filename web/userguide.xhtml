@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>User Guide</title>
+    </h:head>
+    <h:body>
+        <script type="text/javascript">
+            function back() {
+                if ("#{user.loggedIn}" !== "valid") {
+                    window.location.replace("home.xhtml");
+                }
+                else
+                    window.location.replace("/MayflowerTravelSystem/Customers/main.xhtml");
+            }
+        </script>
+        <center><p:commandButton id="mainMenu" value="Back" onclick="back()"></p:commandButton></center>
+        <h:form>
+            <p:menu>
+                <p:submenu label="How Can I...?">
+                    <p:menuitem value="Log In To The System"></p:menuitem>
+                    <p:menuitem value="Create An Account"></p:menuitem>
+                    <p:menuitem value="See My Reservations"></p:menuitem>
+                    <p:menuitem value="Search For Flights"></p:menuitem>
+                    <p:menuitem value="Find Recommended Flights"></p:menuitem>
+                    <p:menuitem value="Make A Reservation"></p:menuitem>
+                    <p:menuitem value="Cancel A Reservation"></p:menuitem>
+                    <p:menuitem value="Make A Reverse Auction Bid"></p:menuitem>
+                    <p:menuitem value="See My Bid History"></p:menuitem>
+                </p:submenu>
+            </p:menu>
+        </h:form>
+        <h3>Logging In</h3>
+        <ol>
+            <li>From the home page click the link, "Sign In".  You are redirected to a login page.</li>
+            <li>Enter your e-mail address and password (case sensitive). If this is your first time using the system, follow the steps for signing up.</li>
+            <li>Click the "Sign In" button. If you're e-mail and password match, you will enter to the user main page.  Otherwise, you will be redirected to an error page. From this page you have the option to try again.</li>
+        </ol>
+        <h3>Creating An Account</h3>
+        If you already have an account, follow the steps for logging in.  Otherwise, follow the following steps:
+        <ol>
+            <li>From the home page click the link, "Sign Up".  You are redirected to a registration form.</li>
+            <li>Fill out all textfields in the form.  Don't leave any fields blank</li>
+            <li>When the form is filled out, click the "Register" button.  If registration is successful, you will be redirected to the login page where you can login with your new account.</li>
+        </ol>
+        
+    </h:body>
+</html>
+
