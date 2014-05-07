@@ -171,7 +171,14 @@ public class flightSearch {
                 if(rs.next()){
                     resrNo = rs.getInt(1) + 1;
                 }
-              
+                
+                sql = "INSERT INTO passenger values(?,?)";
+                
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, personID);
+                ps.setInt(2, accountNo);
+                
+                ps.execute();
                 
                 sql ="INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
                 
@@ -239,6 +246,17 @@ public class flightSearch {
     
     
     private static Flight selectedFlight;
+    private static Flight selectedReturnFlight;
+
+    public Flight getSelectedReturnFlight() {
+        return selectedReturnFlight;
+    }
+
+    public void setSelectedReturnFlight(Flight selectedReturnFlight) {
+        flightSearch.selectedReturnFlight = selectedReturnFlight;
+    }
+    
+    
 
     public int getEmployeeSSN() {
         return employeeSSN;
@@ -357,6 +375,70 @@ public class flightSearch {
                 ps = con.prepareStatement(sql);
                 ps.setString(1, flightFrom);
                 ps.setString(2, flightTo);
+                ps.execute();
+                rs = ps.getResultSet();
+                flightResults.removeAll(flightResults);
+                int i = 0;
+                while(rs.next()){
+                    //flightResults.add()
+                    flightResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getDate("DepTime"), rs.getDate("ArrTime"), 
+                             rs.getString("Class"), rs.getDouble("fare"),rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
+                    i++;
+                }
+                
+                
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    
+    public void searchRoundTripFlights(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                String sql = "Create OR Replace view SearchResults(Name, FlightNo, DepTime, ArrTime, DepAirportID, ArrAirportID, LegNo, Class, fare, AirlineID)\n"
+                        + "as\n"
+                        + "SELECT DISTINCT R.Name, L.FlightNo, L.DepTime, L.ArrTime, L.DepAirportId, L.ArrAirportId, L.LegNo, M.Class, M.Fare, L.AirlineID\n"
+                        + "FROM Flight F, Leg L, Airport A , Fare M, Airline R\n"
+                        + "WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo \n"
+                        + " AND (L.DepAirportId = ? OR L.ArrAirportId = ?) AND M.AirlineID = L.AirlineID \n"
+                        + "AND M.FlightNo = L.FlightNo AND R.Id = L.AirlineID AND M.FareType = 'Regular' \n"
+                        + "AND L.DepTime > ? AND L.DepTime < ? ";
+                ps = con.prepareStatement(sql);
+                ps.setString(1, flightTo);
+                ps.setString(2, flightFrom);
+                ps.setDate(3, new java.sql.Date(returning.getTime()));
+                ps.setDate(4, new java.sql.Date(returning.getTime() + + (1000 * 60 * 60 * 24)));
+                ps.execute();
+
+                sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, A.LegNo, A.AirlineID, B.ArrAirportID\n" +
+                      "From searchresults A, searchresults B\n" +
+                      "Where ((A.ArrAirportID = B.DepAirportID) OR (A.DepAirportID = ? AND B.ArrAirportID = ?))";
+                
+                ps = con.prepareStatement(sql);
+                ps.setString(1, flightTo);
+                ps.setString(2, flightFrom);
                 ps.execute();
                 rs = ps.getResultSet();
                 flightResults.removeAll(flightResults);
