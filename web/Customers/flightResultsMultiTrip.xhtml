@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Round Trip</title>
+    </h:head>
+    <h:body>
+        <script type="text/javascript">
+
+            if ("#{user.loggedIn}" != "valid") {
+                window.location.replace("../error.xhtml");
+            }
+
+        </script>
+        #{flightSearch.searchMultiTripFlightsPartOne()}
+        <h:form>
+            <h:panelGrid id="grid" columns="1" style="margin-bottom:15px">
+            <p:dataTable id="flight" var="flight" value="#{flightSearch.flightResults}" 
+                         selection="#{flightSearch.selectedFlight}" rowKey="#{flight.UID}" selectionMode="single">
+
+                <f:facet name="header">
+                    Click "Reserve" button after selecting a row to reserve the flight at current price<br />
+                    Click "Auction" button after selecting to name your own price
+                </f:facet>
+
+                <p:column headerText="Airline">
+                    #{flight.airline}
+                </p:column>
+
+                <p:column headerText="Flight No.">
+                    #{flight.flightNo}
+                </p:column>
+
+                <p:column headerText="Departure Time" >
+                    #{flight.deptTime}
+                </p:column>
+                
+                <p:column headerText="Arrival Time" >
+                    #{flight.arrTime}
+                </p:column>
+
+                <p:column headerText="Departure From" >
+                    #{flight.deptAirport}
+                </p:column>
+
+                <p:column headerText="Class" >
+                    #{flight.seatClass}
+                </p:column>
+
+                <p:column headerText="Fare">
+                    #{flight.fare}
+                </p:column>
+
+            </p:dataTable>
+            #{flightSearch.searchMultiTripFlightsPartTwo()}
+            <p:dataTable id="returnFlight" var="flight" value="#{flightSearch.flightReturnResults}" 
+                         selection="#{flightSearch.selectedReturnFlight}" rowKey="#{flight.UID}" selectionMode="single">
+
+                <f:facet name="header">
+                    Click "Reserve" button after selecting a row to reserve the flight at current price<br />
+                    Click "Auction" button after selecting to name your own price
+                </f:facet>
+
+                <p:column headerText="Airline">
+                    #{flight.airline}
+                </p:column>
+
+                <p:column headerText="Flight No.">
+                    #{flight.flightNo}
+                </p:column>
+
+                <p:column headerText="Departure Time" >
+                    #{flight.deptTime}
+                </p:column>
+                
+                <p:column headerText="Arrival Time" >
+                    #{flight.arrTime}
+                </p:column>
+
+                <p:column headerText="Departure From" >
+                    #{flight.deptAirport}
+                </p:column>
+
+                <p:column headerText="Class" >
+                    #{flight.seatClass}
+                </p:column>
+
+                <p:column headerText="Fare">
+                    #{flight.fare}
+                </p:column>
+
+                <f:facet name="footer">
+
+                </f:facet>
+            </p:dataTable>
+            </h:panelGrid>
+            <p:commandButton id="reserveButton" value="Reserve" action="reserveFlightRoundTrip" process="@all" update="grid" icon="ui-icon-search"/>
+            <p:commandButton id="auctionButton" value="Auction" action="auction" icon="ui-icon-search"/>
+            
+        </h:form>
+    </h:body>
+</html>
+

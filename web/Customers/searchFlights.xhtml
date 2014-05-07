@@ -22,10 +22,23 @@
                     document.getElementById("returning").style.display = "none";
                     document.getElementById("roundTrip").style.display = "none";
                     document.getElementById("oneWay").style.display = "block";
+                    document.getElementById("middleFlight").style.display = "none";
+                    document.getElementById("multiTrip").style.display = "none";
                 }
-                else {
+                else if(type == "Round-Trip") {
                     document.getElementById("returning").style.display = "block";
                     document.getElementById("roundTrip").style.display = "block";
+                    document.getElementById("oneWay").style.display = "none";
+                    document.getElementById("middleFlight").style.display = "none";
+                    document.getElementById("multiTrip").style.display = "none";
+                }
+                else{
+                    document.getElementById("returning").style.display = "block";
+                    document.getElementById("roundTrip").style.display = "block";
+                    document.getElementById("oneWay").style.display = "none";
+                    document.getElementById("middleFlight").style.display = "block";
+                    document.getElementById("multiTrip").style.display = "block";
+                    document.getElementById("roundTrip").style.display = "none";
                     document.getElementById("oneWay").style.display = "none";
                 }
 
@@ -49,9 +62,15 @@
                 <p:autoComplete id="ff" dropdown="true" pt:placeholder="Enter an Airport" value="#{flightSearch.flightFrom}" 
                                 completeMethod="#{flightSearch.completeCities()}" />
 
-
+            </h:panelGrid>
+            <div id="middleFlight" style="display:none">
+                <h:outputLabel value="Flying Middle" style="font-weight:bold;margin-right:7px;"  />
+                <p:autoComplete id="ft" dropdown="true" pt:placeholder="Enter an Airport" value="#{flightSearch.flightMiddle}" 
+                                completeMethod="#{flightSearch.completeCities()}" style="margin-bottom:5px;" />
+            </div>
+            <h:panelGrid id="grid4" columns="2" style="margin-bottom:15px">
                 <h:outputLabel value="Flying To " style="font-weight:bold" />
-                <p:autoComplete id="ft" dropdown="true" pt:placeholder="Enter an Airport" value="#{flightSearch.flightTo}" 
+                <p:autoComplete id="mt" dropdown="true" pt:placeholder="Enter an Airport" value="#{flightSearch.flightTo}" 
                                 completeMethod="#{flightSearch.completeCities()}" />
 
                 <h:outputText value="Departing Time" />
@@ -68,6 +87,9 @@
             </div>
             <div id="oneWay" style="display:none">
                 <p:commandButton value="Search" action="flightResults" />
+            </div>
+            <div id="multiTrip" style="display:none">
+                <p:commandButton value="Search" action="flightResultsMultiTrip" />
             </div>
         </h:form>
     </h:body>
