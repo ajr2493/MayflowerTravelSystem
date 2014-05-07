@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -280,11 +281,13 @@ public class flightSearch {
                 
                 sql ="INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
                 
+                double fare = selectedFlight.fare + selectedReturnFlight.fare;
+                
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, resrNo);
                 ps.setTimestamp(2, new java.sql.Timestamp(new Date().getTime()));
-                ps.setDouble(3, (selectedFlight.fare * .10));
-                ps.setDouble(4, selectedFlight.fare);
+                ps.setDouble(3, (fare * .10));
+                ps.setDouble(4, fare);
                 ps.setInt(5, 0);
                 ps.setInt(6, accountNo);
 
@@ -492,7 +495,7 @@ public class flightSearch {
                 int i = 0;
                 while(rs.next()){
                     //flightResults.add()
-                    flightResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getDate("DepTime"), rs.getDate("ArrTime"), 
+                    flightResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"), 
                              rs.getString("Class"), rs.getDouble("fare"),rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
                     i++;
                 }
@@ -558,7 +561,7 @@ public class flightSearch {
                 int i = 0;
                 while(rs.next()){
                     //flightResults.add()
-                    flightReturnResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getDate("DepTime"), rs.getDate("ArrTime"), 
+                    flightReturnResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"), 
                              rs.getString("Class"), rs.getDouble("fare"),rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
                     i++;
                 }
@@ -632,8 +635,8 @@ public class flightSearch {
         private String airline;
         private String airlineID;
         private int flightNo;
-        private Date deptTime;
-        private Date arrTime;
+        private Timestamp deptTime;
+        private Timestamp arrTime;
         private String seatClass;
         private double fare;
         private String deptAirport;
@@ -687,12 +690,12 @@ public class flightSearch {
 
         
 
-        public Flight(String airlineID, String airline, int flightNo, java.sql.Date deptTime, java.sql.Date arrTime, String seatClass, double fare, String deptAirport, String arrAirport, int UID, int legNo) {
+        public Flight(String airlineID, String airline, int flightNo, Timestamp deptTime, Timestamp arrTime, String seatClass, double fare, String deptAirport, String arrAirport, int UID, int legNo) {
             this.airline = airline;
             this.airlineID = airlineID;
             this.flightNo = flightNo;
-            this.deptTime = new Date(deptTime.getTime());
-            this.arrTime = new Date(arrTime.getTime());
+            this.deptTime = deptTime;
+            this.arrTime = arrTime;
             this.seatClass = seatClass;
             this.fare = fare;
             this.deptAirport = deptAirport;

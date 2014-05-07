@@ -35,7 +35,7 @@
                 <h:outputLabel value="Employee SSN. Leave Blank if you did this on your own " style="font-weight:bold" />
                 <p:inputText value="#{flightSearch.employeeSSN}" />
             </h:panelGrid>
-            <p:commandButton value="Confirm" action="main" process="@all" update="grid" 
+            <p:commandButton value="Confirm" action="main?faces-redirect=true" process="@all" update="grid" 
                              actionListener="#{flightSearch.reserveOneWayTicket()}"></p:commandButton>
         </h:form>
     </h:body>

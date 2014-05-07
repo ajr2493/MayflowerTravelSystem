@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+    </h:head>
+    <h:body>
+        <script type="text/javascript">
+            if ("#{user.loggedIn}" != "valid") {
+                window.location.replace("../error.xhtml");
+            }
+
+        </script>
+
+        <h1> Your Reservations </h1>
+        #{myReservations.myReservations()}
+        <h:form id="form">
+            <h:panelGrid id="display">
+                <p:dataTable value="#{myReservations.itinerary}" var="o" 
+                             styleClass="reservation-table">
+
+                    <f:facet name="header">
+                        Here is your Itinerary
+                    </f:facet>
+                    <p:column headerText="Reservation Numbers">
+                        #{o.resrNo}
+                    </p:column>
+
+                    <p:column headerText="Airline">
+                        #{o.airlineId}
+                    </p:column>
+
+                    <p:column headerText="Flight Number">
+                        #{o.flightNo}
+                    </p:column>
+
+                    <p:column headerText="Departing Airport">
+                        #{o.departing}
+                    </p:column>
+
+                    <p:column headerText="Arriving Airport">
+                        #{o.arriving}
+                    </p:column>
+                    
+                    <p:column headerText="Departing Time">
+                        #{o.depTime}
+                    </p:column>
+
+                    <p:column headerText="Arriving Time">
+                        #{o.arrTime}
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+        </h:form>
+        <p:commandButton id="mainMenu" value="Go Home" action="main?faces-redirect=true"></p:commandButton>
+    </h:body>
+</html>
+

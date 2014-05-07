@@ -5,14 +5,13 @@
  */
 package reservations;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -31,17 +30,21 @@ public class myReservations {
     private static final ArrayList<TableReservation> reservations = new ArrayList<TableReservation>();
     private static TableReservation selectedReservation;
     
-    
-    private int accountNo = (Integer) FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap().get("accountNo");
+    private static final ArrayList<Itinerary> itinerary = new ArrayList<Itinerary>();
 
+    private int accountNo = (Integer) FacesContext.getCurrentInstance().getExternalContext()
+            .getSessionMap().get("accountNo");
 
     public ArrayList<TableReservation> getReservations() {
 
         return reservations;
     }
 
-    public  TableReservation getSelectedReservation() {
+    public ArrayList<Itinerary> getItinerary() {
+        return itinerary;
+    }
+    
+    public TableReservation getSelectedReservation() {
         return selectedReservation;
     }
 
@@ -49,12 +52,57 @@ public class myReservations {
         myReservations.selectedReservation = selectedReservation;
     }
 
-    
-
     public myReservations() {
     }
 
-    public void cancelReservation(){
+    public void listItinerary(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                String sql = "SELECT DISTINCT I.ResrNo, I.AirlineID, I.FlightNo, \n" +
+                             "DA.Name AS Departing, AA.Name AS Arriving, \n" +
+                             "L.DepTime, L.ArrTime \n" +
+                             "FROM Includes I, Leg L, Airport DA, Airport AA \n" +
+                             "WHERE I.AirlineID = L.AirlineID AND I.FlightNo = L.FlightNo \n" +
+                             "AND L.DepAirportID = DA.Id AND L.ArrAirportID = AA.Id \n" +
+                             "AND I.ResrNo = ?";
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, selectedReservation.resrNo);
+                ps.execute();
+
+                System.out.println(ps);
+                rs = ps.getResultSet();
+                itinerary.removeAll(itinerary);
+                while(rs.next()){
+                    itinerary.add(new Itinerary(rs.getInt("ResrNo"), rs.getString("AirlineID"),rs.getInt("FlightNo"),rs.getString("Departing"), rs.getString("Arriving"),
+                            rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime")));
+                }
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void cancelReservation() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -73,12 +121,12 @@ public class myReservations {
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, selectedReservation.resrNo);
                 ps.execute();
-                
+
                 sql = "DELETE FROM ReservationPassenger WHERE ResrNo = ? ";
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, selectedReservation.resrNo);
                 ps.execute();
-                
+
                 sql = "DELETE FROM Reservation WHERE ResrNo  = ? ";
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, selectedReservation.resrNo);
@@ -97,6 +145,7 @@ public class myReservations {
             }
         }
     }
+
     public void myReservations() {
         reservations.removeAll(reservations);
         try {
@@ -143,6 +192,93 @@ public class myReservations {
         //reserveArray = reservations.toArray(reserveArray);
     }
 
+    public static class Itinerary {
+
+        int resrNo;
+        String airlineId;
+        int flightNo;
+        String Departing;
+        String Arriving;
+        Timestamp DepTime;
+        Timestamp ArrTime;
+
+        public int getResrNo() {
+            return resrNo;
+        }
+
+        public void setResrNo(int resrNo) {
+            this.resrNo = resrNo;
+        }
+
+        public String getAirlineId() {
+            return airlineId;
+        }
+
+        public void setAirlineId(String airlineId) {
+            this.airlineId = airlineId;
+        }
+
+        public int getFlightNo() {
+            return flightNo;
+        }
+
+        public void setFlightNo(int flightNo) {
+            this.flightNo = flightNo;
+        }
+
+        public String getDeparting() {
+            return Departing;
+        }
+
+        public void setDeparting(String Departing) {
+            this.Departing = Departing;
+        }
+
+        public String getArriving() {
+            return Arriving;
+        }
+
+        public void setArriving(String Arriving) {
+            this.Arriving = Arriving;
+        }
+
+        public Timestamp getDepTime() {
+            return DepTime;
+        }
+
+        public void setDepTime(Timestamp DepTime) {
+            this.DepTime = DepTime;
+        }
+
+        public Timestamp getArrTime() {
+            return ArrTime;
+        }
+
+        public void setArrTime(Timestamp ArrTime) {
+            this.ArrTime = ArrTime;
+        }
+
+        public Itinerary(int resrNo, String airlineId, int flightNo, String Departing, String Arriving, Timestamp DepTime, Timestamp ArrTime) {
+            this.resrNo = resrNo;
+            this.airlineId = airlineId;
+            this.flightNo = flightNo;
+            this.Departing = Departing;
+            this.Arriving = Arriving;
+            this.DepTime = DepTime;
+            this.ArrTime = ArrTime;
+        }
+
+        @Override
+        public String toString() {
+            return "Itinerary{" + "resrNo=" + resrNo + ", airlineId=" + airlineId + ", flightNo=" + flightNo + ", Departing=" + Departing + ", Arriving=" + Arriving + ", DepTime=" + DepTime + ", ArrTime=" + ArrTime + '}';
+        }
+
+        
+
+
+
+
+    }
 
     public static class TableReservation {
 
