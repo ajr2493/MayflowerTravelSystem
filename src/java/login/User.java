@@ -231,9 +231,7 @@ public class User {
 
     public String login() {
         dbData(name);
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-                .getExternalContext().getSession(false);
-        if (isLoginPage && (name.equals(dbName) && password.equals(dbPassword))) {
+        if ((name.equals(dbName) && password.equals(dbPassword))) {
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("email", name);
             FacesContext.getCurrentInstance().getExternalContext()
