@@ -28,6 +28,7 @@ public class myReservations {
      * Creates a new instance of myReservations
      */
     private static final ArrayList<TableReservation> reservations = new ArrayList<TableReservation>();
+    private static final ArrayList<TableReservation> cur_reservations = new ArrayList<TableReservation>();
     private static TableReservation selectedReservation;
     
     private static final ArrayList<Itinerary> itinerary = new ArrayList<Itinerary>();
@@ -38,6 +39,10 @@ public class myReservations {
     public ArrayList<TableReservation> getReservations() {
 
         return reservations;
+    }
+
+    public ArrayList<TableReservation> getCur_reservations() {
+        return cur_reservations;
     }
 
     public ArrayList<Itinerary> getItinerary() {
@@ -190,6 +195,50 @@ public class myReservations {
         }
         //reservations.add(new TableReservation(555, new Date(141224241), 22.4, 12.1,11111));
         //reserveArray = reservations.toArray(reserveArray);
+    }
+    
+    public void curReservations(){
+        cur_reservations.removeAll(cur_reservations);
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                String sql = "SELECT * FROM Reservation R \n"
+                        + "WHERE EXISTS ( \n"
+                        + " SELECT * FROM Includes I, Leg L \n"
+                        + " WHERE R.ResrNo = I.ResrNo AND I.AirlineID = L.AirlineID \n"
+                        + " AND I.FlightNo = L.FlightNo AND L.DepTime >= NOW()) \n"
+                        + "AND R.AccountNo = ?";
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, accountNo);
+                ps.execute();
+                rs = ps.getResultSet();
+                while (rs.next()) {
+                    cur_reservations.add(new TableReservation(rs.getInt("ResrNo"), rs.getDate("ResrDate"), rs.getDouble("BookingFee"), rs.getDouble("TotalFare"), rs.getInt("RepSSN")));
+                }
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static class Itinerary {

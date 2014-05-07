@@ -11,14 +11,14 @@
                 console.log(#{user.loggedIn});
                 if("#{user.loggedIn}"!=="valid"){
                     window.location.replace("../error.xhtml");
-                  
                 }
 
         </script>
         <h:form>
             <p:panelMenu style ="width:400px">
-                <p:submenu label="Reservations">
-                    <p:menuitem value="My Reservations" outcome="my_reservations"></p:menuitem>
+                <p:submenu label="My Reservations">
+                    <p:menuitem value="Current Reservations" outcome ="cur_reservations"></p:menuitem>
+                    <p:menuitem value="All Reservations" outcome="my_reservations"></p:menuitem>
                 </p:submenu>
                 <p:submenu label ="Flights">
                     <p:menuitem value="Search Flights" outcome="searchFlights"></p:menuitem>
