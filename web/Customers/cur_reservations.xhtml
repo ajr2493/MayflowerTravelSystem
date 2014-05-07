@@ -47,7 +47,7 @@
                 </p:column>
                 <f:facet name="footer">
                     <p:commandButton id="itineraryButton" update=":form" process="@all" value="Itinerary" action="itinerary" actionListener="#{myReservations.listItinerary()}" icon=".ui-icon-info"/>
-                    <p:commandButton id="reserveButton" update=":form" process="@all" value="Cancel" onclick="window.location.reload()" actionListener="#{myReservations.cancelReservation()}"  icon="ui-icon-circle-close"/>
+                    <p:commandButton id="reserveButton" update=":form" process="@all" value="Cancel" onclick="setTimeout(window.location.reload(),10000)" actionListener="#{myReservations.cancelReservation()}"  icon="ui-icon-circle-close"/>
                 </f:facet>
             </p:dataTable>
             </h:panelGrid>

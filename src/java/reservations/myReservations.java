@@ -88,13 +88,13 @@ public class myReservations {
                     ps.setInt(1, selectedReservation.resrNo);
                     ps.execute();
 
-                    System.out.println(ps);
                     rs = ps.getResultSet();
                     itinerary.removeAll(itinerary);
                     while (rs.next()) {
                         itinerary.add(new Itinerary(rs.getInt("ResrNo"), rs.getString("AirlineID"), rs.getInt("FlightNo"), rs.getString("Departing"), rs.getString("Arriving"),
                                 rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime")));
                     }
+                    con.commit();
                 } catch (Exception e) {
                     con.rollback();
                 }
@@ -133,22 +133,24 @@ public class myReservations {
                     String sql = "DELETE FROM Includes WHERE ResrNo = ? ";
                     ps = con.prepareStatement(sql);
                     ps.setInt(1, selectedReservation.resrNo);
-                    ps.execute();
+                    ps.executeUpdate();
 
                     sql = "DELETE FROM ReservationPassenger WHERE ResrNo = ? ";
                     ps = con.prepareStatement(sql);
                     ps.setInt(1, selectedReservation.resrNo);
-                    ps.execute();
+                    ps.executeUpdate();
 
                     sql = "DELETE FROM Reservation WHERE ResrNo  = ? ";
                     ps = con.prepareStatement(sql);
                     ps.setInt(1, selectedReservation.resrNo);
-                    ps.execute();
+                    ps.executeUpdate();
+                    con.commit();
                 } catch (Exception e) {
                     con.rollback();
+                    System.out.println(e);
                 }
             }
-
+                
         } catch (Exception e) {
             System.out.println(e);
         } finally {
@@ -193,6 +195,7 @@ public class myReservations {
                     while (rs.next()) {
                         reservations.add(new TableReservation(rs.getInt("ResrNo"), rs.getDate("ResrDate"), rs.getDouble("BookingFee"), rs.getDouble("TotalFare"), rs.getInt("RepSSN")));
                     }
+                    con.commit();
                 } catch (Exception e) {
                     con.rollback();
                 }
@@ -229,7 +232,7 @@ public class myReservations {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
-                con.setAutoCommit(true);
+                con.setAutoCommit(false);
                 try {
                     String sql = "SELECT * FROM Reservation R \n"
                             + "WHERE EXISTS ( \n"
@@ -244,6 +247,7 @@ public class myReservations {
                     while (rs.next()) {
                         cur_reservations.add(new TableReservation(rs.getInt("ResrNo"), rs.getDate("ResrDate"), rs.getDouble("BookingFee"), rs.getDouble("TotalFare"), rs.getInt("RepSSN")));
                     }
+                    con.commit();
                 } catch (Exception e) {
                     con.rollback();
                 }
