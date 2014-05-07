@@ -48,6 +48,120 @@ public class flightSearch {
     //One-Way, Round-Trip or Multi-Trip
     private String flightDirection;
 
+    private static final ArrayList<Flight> flightResults = new ArrayList<Flight>();
+    private static final ArrayList<Flight> flightReturnResults = new ArrayList<Flight>();
+    private static final ArrayList<Flight> bestSellingFlights = new ArrayList<Flight>();
+    private static final ArrayList<Flight> recommendFlights = new ArrayList<Flight>();
+
+    private static Flight selectedFlight;
+    private static Flight selectedReturnFlight;
+
+    public Flight getSelectedReturnFlight() {
+        return selectedReturnFlight;
+    }
+
+    public void setSelectedReturnFlight(Flight selectedReturnFlight) {
+        flightSearch.selectedReturnFlight = selectedReturnFlight;
+    }
+
+    public int getEmployeeSSN() {
+        return employeeSSN;
+    }
+
+    public void setEmployeeSSN(int employeeSSN) {
+        this.employeeSSN = employeeSSN;
+    }
+
+    public int getSeatNo() {
+        return seatNo;
+    }
+
+    public void setSeatNo(int seatNo) {
+        this.seatNo = seatNo;
+    }
+
+    public String getSeatPreference() {
+        return seatPreference;
+    }
+
+    public void setSeatPreference(String seatPreference) {
+        this.seatPreference = seatPreference;
+    }
+
+    public String getMealPreference() {
+        return mealPreference;
+    }
+
+    public void setMealPreference(String mealPreference) {
+        this.mealPreference = mealPreference;
+    }
+
+    public Flight getSelectedFlight() {
+        return selectedFlight;
+    }
+
+    public void setSelectedFlight(Flight selectedFlight) {
+        flightSearch.selectedFlight = selectedFlight;
+    }
+
+    public ArrayList<Flight> getFlightResults() {
+        return flightResults;
+    }
+
+    public ArrayList<Flight> getBestSellingFlights() {
+        return bestSellingFlights;
+    }
+
+    public ArrayList<Flight> getRecommendFlights() {
+        return recommendFlights;
+    }
+
+    public ArrayList<Flight> getFlightReturnResults() {
+        return flightReturnResults;
+    }
+
+    public String getFlightFrom() {
+        return flightFrom;
+    }
+
+    public void setFlightFrom(String flightFrom) {
+        this.flightFrom = flightFrom;
+    }
+
+    public String getFlightTo() {
+        return flightTo;
+    }
+
+    public void setFlightTo(String flightTo) {
+        this.flightTo = flightTo;
+    }
+
+    public Date getDeparting() {
+        return departing;
+    }
+
+    public void setDeparting(Date departing) {
+        this.departing = departing;
+    }
+
+    public Date getReturning() {
+        return returning;
+    }
+
+    public void setReturning(Date returning) {
+        this.returning = returning;
+    }
+
+    
+    public String getFlightDirection() {
+        return flightDirection;
+    }
+
+    public void setFlightDirection(String flightDirection) {
+        this.flightDirection = flightDirection;
+
+    }
+
     //Seat Preferences
     public List<String> seatPreferences() {
         List<String> preference = new ArrayList<String>();
@@ -344,110 +458,7 @@ public class flightSearch {
         }
     }
 
-    private static final ArrayList<Flight> flightResults = new ArrayList<Flight>();
-    private static final ArrayList<Flight> flightReturnResults = new ArrayList<Flight>();
-    private static final ArrayList<Flight> bestSellingFlights = new ArrayList<Flight>();
-    private static final ArrayList<Flight> recommendFlights = new ArrayList<Flight>();
-
-    private static Flight selectedFlight;
-    private static Flight selectedReturnFlight;
-
-    public Flight getSelectedReturnFlight() {
-        return selectedReturnFlight;
-    }
-
-    public void setSelectedReturnFlight(Flight selectedReturnFlight) {
-        flightSearch.selectedReturnFlight = selectedReturnFlight;
-    }
-
-    public int getEmployeeSSN() {
-        return employeeSSN;
-    }
-
-    public void setEmployeeSSN(int employeeSSN) {
-        this.employeeSSN = employeeSSN;
-    }
-
-    public int getSeatNo() {
-        return seatNo;
-    }
-
-    public void setSeatNo(int seatNo) {
-        this.seatNo = seatNo;
-    }
-
-    public String getSeatPreference() {
-        return seatPreference;
-    }
-
-    public void setSeatPreference(String seatPreference) {
-        this.seatPreference = seatPreference;
-    }
-
-    public String getMealPreference() {
-        return mealPreference;
-    }
-
-    public void setMealPreference(String mealPreference) {
-        this.mealPreference = mealPreference;
-    }
-
-    public Flight getSelectedFlight() {
-        return selectedFlight;
-    }
-
-    public void setSelectedFlight(Flight selectedFlight) {
-        flightSearch.selectedFlight = selectedFlight;
-    }
-
-    public ArrayList<Flight> getFlightResults() {
-        return flightResults;
-    }
-
-    public ArrayList<Flight> getBestSellingFlights() {
-        return bestSellingFlights;
-    }
-
-    public ArrayList<Flight> getRecommendFlights() {
-        return recommendFlights;
-    }
-
-    public ArrayList<Flight> getFlightReturnResults() {
-        return flightReturnResults;
-    }
-
-    public String getFlightFrom() {
-        return flightFrom;
-    }
-
-    public void setFlightFrom(String flightFrom) {
-        this.flightFrom = flightFrom;
-    }
-
-    public String getFlightTo() {
-        return flightTo;
-    }
-
-    public void setFlightTo(String flightTo) {
-        this.flightTo = flightTo;
-    }
-
-    public Date getDeparting() {
-        return departing;
-    }
-
-    public void setDeparting(Date departing) {
-        this.departing = departing;
-    }
-
-    public Date getReturning() {
-        return returning;
-    }
-
-    public void setReturning(Date returning) {
-        this.returning = returning;
-    }
-
+    
     public void searchOneWayFlights() {
 
         try {
@@ -518,6 +529,76 @@ public class flightSearch {
 
     }
 
+    public void searchRoundTripFlights() {
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                con.setAutoCommit(true);
+                String sql = "Create OR Replace view SearchResults(Name, FlightNo, DepTime, ArrTime, DepAirportID, ArrAirportID, LegNo, Class, fare, AirlineID)\n"
+                        + "as\n"
+                        + "SELECT DISTINCT R.Name, L.FlightNo, L.DepTime, L.ArrTime, L.DepAirportId, L.ArrAirportId, L.LegNo, M.Class, M.Fare, L.AirlineID\n"
+                        + "FROM Flight F, Leg L, Airport A , Fare M, Airline R\n"
+                        + "WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo \n"
+                        + " AND (L.DepAirportId = ? OR L.ArrAirportId = ?) AND M.AirlineID = L.AirlineID \n"
+                        + "AND M.FlightNo = L.FlightNo AND R.Id = L.AirlineID AND M.FareType = 'Regular' \n"
+                        + "AND L.DepTime > ? AND L.DepTime < ? ";
+                ps = con.prepareStatement(sql);
+                ps.setString(1, flightTo);
+                ps.setString(2, flightFrom);
+                ps.setDate(3, new java.sql.Date(returning.getTime()));
+                ps.setDate(4, new java.sql.Date(returning.getTime() + +(1000 * 60 * 60 * 24)));
+                try {
+                    ps.execute();
+
+                    sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, A.LegNo, A.AirlineID, B.ArrAirportID\n"
+                            + "From searchresults A, searchresults B\n"
+                            + "Where ((A.ArrAirportID = B.DepAirportID) OR (A.DepAirportID = ? AND B.ArrAirportID = ?))";
+
+                    ps = con.prepareStatement(sql);
+                    ps.setString(1, flightTo);
+                    ps.setString(2, flightFrom);
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    flightReturnResults.removeAll(flightReturnResults);
+                    int i = 0;
+                    while (rs.next()) {
+                        //flightResults.add()
+                        flightReturnResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"),
+                                rs.getString("Class"), rs.getDouble("fare"), rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
+                        i++;
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.setAutoCommit(true);
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    
     public void searchBestSellingFlights() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -637,75 +718,7 @@ public class flightSearch {
 
     }
 
-    public void searchRoundTripFlights() {
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Where is your MySQL JDBC Driver?");
-            e.printStackTrace();
-
-        }
-        PreparedStatement ps = null;
-        Connection con = null;
-        ResultSet rs;
-        try {
-
-            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
-            if (con != null) {
-                con.setAutoCommit(true);
-                String sql = "Create OR Replace view SearchResults(Name, FlightNo, DepTime, ArrTime, DepAirportID, ArrAirportID, LegNo, Class, fare, AirlineID)\n"
-                        + "as\n"
-                        + "SELECT DISTINCT R.Name, L.FlightNo, L.DepTime, L.ArrTime, L.DepAirportId, L.ArrAirportId, L.LegNo, M.Class, M.Fare, L.AirlineID\n"
-                        + "FROM Flight F, Leg L, Airport A , Fare M, Airline R\n"
-                        + "WHERE F.AirlineID = L.AirlineID AND F.FlightNo = L.FlightNo \n"
-                        + " AND (L.DepAirportId = ? OR L.ArrAirportId = ?) AND M.AirlineID = L.AirlineID \n"
-                        + "AND M.FlightNo = L.FlightNo AND R.Id = L.AirlineID AND M.FareType = 'Regular' \n"
-                        + "AND L.DepTime > ? AND L.DepTime < ? ";
-                ps = con.prepareStatement(sql);
-                ps.setString(1, flightTo);
-                ps.setString(2, flightFrom);
-                ps.setDate(3, new java.sql.Date(returning.getTime()));
-                ps.setDate(4, new java.sql.Date(returning.getTime() + +(1000 * 60 * 60 * 24)));
-                try {
-                    ps.execute();
-
-                    sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, A.LegNo, A.AirlineID, B.ArrAirportID\n"
-                            + "From searchresults A, searchresults B\n"
-                            + "Where ((A.ArrAirportID = B.DepAirportID) OR (A.DepAirportID = ? AND B.ArrAirportID = ?))";
-
-                    ps = con.prepareStatement(sql);
-                    ps.setString(1, flightTo);
-                    ps.setString(2, flightFrom);
-                    ps.execute();
-                    rs = ps.getResultSet();
-                    flightReturnResults.removeAll(flightReturnResults);
-                    int i = 0;
-                    while (rs.next()) {
-                        //flightResults.add()
-                        flightReturnResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"),
-                                rs.getString("Class"), rs.getDouble("fare"), rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
-                        i++;
-                    }
-                    con.commit();
-                } catch (Exception e) {
-                    con.rollback();
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println(e);
-        } finally {
-            try {
-                con.setAutoCommit(true);
-                con.close();
-                ps.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
+    
 
     public List<String> completeCities() {
         try {
@@ -751,15 +764,6 @@ public class flightSearch {
             }
         }
         return results;
-    }
-
-    public String getFlightDirection() {
-        return flightDirection;
-    }
-
-    public void setFlightDirection(String flightDirection) {
-        this.flightDirection = flightDirection;
-
     }
 
     public static class Flight {
@@ -850,4 +854,18 @@ public class flightSearch {
 
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /***************************************REVERSE AUCTION**********************************************/
+    
+    
+    
 }
