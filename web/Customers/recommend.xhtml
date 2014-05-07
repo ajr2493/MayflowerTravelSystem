@@ -1,19 +1,38 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Recommended Flights</title>
     </h:head>
     <h:body>
-               <script type="text/javascript">
-                if("#{user.loggedIn}"!="valid"){
-                    window.location.replace("../error.xhtml");
-                }
+        <script type="text/javascript">
+
+            if ("#{user.loggedIn}" != "valid") {
+                window.location.replace("../error.xhtml");
+            }
 
         </script>
-        
-        Recommended Flights
+        #{flightSearch.searchRecommendedFlights()}
+        <h:form>
+            <p:dataTable id="recommendFlights" var="flight" value="#{flightSearch.recommendFlights}">
+
+                <f:facet name="header">
+                    A list of recommended Flights in Order of most recommended to least
+                </f:facet>
+                <p:column headerText="Airline">
+                    #{flight.airlineID}
+                </p:column>
+
+                <p:column headerText="Flight No.">
+                    #{flight.flightNo}
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+         <p:commandButton id="mainMenu" value="Go Home" action="main?faces-redirect=true"></p:commandButton>
     </h:body>
 </html>
 

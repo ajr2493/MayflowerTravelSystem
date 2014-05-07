@@ -14,7 +14,7 @@
 
         </script>
 
-        <h1> Your Reservations </h1>
+        <h1> All Your Reservations </h1>
         #{myReservations.myReservations()}
         <h:form id="form">
             <h:panelGrid id="display">
@@ -22,8 +22,7 @@
                          selection="#{myReservations.selectedReservation}" styleClass="reservation-table">
 
                 <f:facet name="header">
-                    Here is a list of your reservations <br />
-                    Click a row and click Cancel to cancel a reservation
+                    Here is a list of ALL your reservations 
                 </f:facet>
                 <p:column headerText="Reservation Numbers">
                     #{o.resrNo}
@@ -44,10 +43,6 @@
                 <p:column headerText="Representative's SSN">
                     #{o.repSSN}
                 </p:column>
-                <f:facet name="footer">
-                    <p:commandButton id="itineraryButton" update=":form" process="@all" value="Itinerary" action="itinerary" actionListener="#{myReservations.listItinerary()}" icon=".ui-icon-info"/>
-                    <p:commandButton id="reserveButton" update=":form" process="@all" value="Cancel" onclick="window.location.reload()" actionListener="#{myReservations.cancelReservation()}"  icon="ui-icon-circle-close"/>
-                </f:facet>
             </p:dataTable>
             </h:panelGrid>
         </h:form>

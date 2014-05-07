@@ -3,12 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 package flight;
-
-
-
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,7 +29,6 @@ public class flightSearch {
     /**
      * Creates a new instance of flightSearch
      */
-
     private String flightFrom;
     private String flightTo;
     private Date departing;
@@ -42,29 +36,27 @@ public class flightSearch {
     private int employeeSSN;
     private int employeeSSNRoundTrip;
     private int accountNo = (Integer) FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap().get("accountNo");
-    
+            .getSessionMap().get("accountNo");
+
     private int personID = (Integer) FacesContext.getCurrentInstance().getExternalContext()
-                .getSessionMap().get("personID");
-    
+            .getSessionMap().get("personID");
+
     private int seatNo;
     private String seatPreference;
     private String mealPreference;
-    
+
     //One-Way, Round-Trip or Multi-Trip
     private String flightDirection;
 
-   
-    
     //Seat Preferences
-    public List<String> seatPreferences(){
+    public List<String> seatPreferences() {
         List<String> preference = new ArrayList<String>();
         preference.add("Aisle Seat");
         preference.add("Window Seat");
         return preference;
     }
-    
-    public List<String> mealPreferences(){
+
+    public List<String> mealPreferences() {
         List<String> preference = new ArrayList<String>();
         preference.add("Chicken");
         preference.add("Beef");
@@ -74,11 +66,11 @@ public class flightSearch {
         preference.add("No Food");
         return preference;
     }
-    
+
     /*Get a list of available seats*/
-    public List<Integer> seatChoices(){
+    public List<Integer> seatChoices() {
         List<Integer> availableSeats = new ArrayList<Integer>();
-         try {
+        try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             System.out.println("Where is your MySQL JDBC Driver?");
@@ -93,46 +85,54 @@ public class flightSearch {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
+                con.setAutoCommit(false);
 
-                String sql = "SELECT SeatNo \n" +
-                             "FROM includes I, reservationpassenger R\n" +
-                             "WHERE R.ResrNo = I.ResrNo AND I.FlightNo = ? ";
-                
+                String sql = "SELECT SeatNo \n"
+                        + "FROM includes I, reservationpassenger R\n"
+                        + "WHERE R.ResrNo = I.ResrNo AND I.FlightNo = ? ";
+
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, selectedFlight.flightNo);
 
-                ps.execute();
-            rs = ps.getResultSet();
-                while(rs.next()){
-                     takenSeats.add(rs.getInt("SeatNo"));
-                }
-                
-                sql = "SELECT NoOfSeats \n" +
-                      "FROM flight f, airline A\n" +
-                      "WHERE f.FlightNo = ? AND f.AirlineID= A.Id AND A.name = ?";
-                
-                ps = con.prepareStatement(sql);
-                ps.setInt(1, selectedFlight.flightNo);
-                ps.setString(2, selectedFlight.airline);
-                ps.execute();
-                rs = ps.getResultSet();
-                if(rs.next()){
-                    for(int i = rs.getInt("NoOfSeats"); i > 0 ; i--){
-                       if(takenSeats.contains(i)){
-                           continue;
-                       }
-                       else{
-                           availableSeats.add(i);
-                       }
+                try {
+                    ps.execute();
+
+                    rs = ps.getResultSet();
+                    while (rs.next()) {
+                        takenSeats.add(rs.getInt("SeatNo"));
                     }
+                    rs.close();
+
+                    sql = "SELECT NoOfSeats \n"
+                            + "FROM flight f, airline A\n"
+                            + "WHERE f.FlightNo = ? AND f.AirlineID= A.Id AND A.name = ?";
+
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, selectedFlight.flightNo);
+                    ps.setString(2, selectedFlight.airline);
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    if (rs.next()) {
+                        for (int i = rs.getInt("NoOfSeats"); i > 0; i--) {
+                            if (takenSeats.contains(i)) {
+                                continue;
+                            } else {
+                                availableSeats.add(i);
+                            }
+                        }
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
                 }
-                
+
             }
 
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             try {
+                con.setAutoCommit(true);
                 con.close();
                 ps.close();
             } catch (Exception e) {
@@ -142,17 +142,14 @@ public class flightSearch {
 
         return availableSeats;
     }
-    
-    
-    
+
     public flightSearch() {
     }
-
 
     /**
      * Reserve Tickets
      */
-    public void reserveOneWayTicket(){
+    public void reserveOneWayTicket() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -163,79 +160,78 @@ public class flightSearch {
         PreparedStatement ps = null;
         Connection con = null;
         ResultSet rs;
-        
+
         try {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
+                con.setAutoCommit(false);
                 String sql = "SELECT max(ResrNo) FROM reservation;";
                 ps = con.prepareStatement(sql);
-                
-                ps.execute();
-                rs = ps.getResultSet();
-                int resrNo = -1;
-                
-                if(rs.next()){
-                    resrNo = rs.getInt(1) + 1;
+
+                try {
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    int resrNo = -1;
+
+                    if (rs.next()) {
+                        resrNo = rs.getInt(1) + 1;
+                    }
+
+                    sql = "Insert into passenger (Id, AccountNo) values (?,?) ON DUPLICATE KEY UPDATE Id=Id;";
+
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, personID);
+                    ps.setInt(2, accountNo);
+
+                    ps.execute();
+
+                    sql = "INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
+
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, resrNo);
+                    ps.setTimestamp(2, new java.sql.Timestamp(new Date().getTime()));
+                    ps.setDouble(3, (selectedFlight.fare * .10));
+                    ps.setDouble(4, selectedFlight.fare);
+                    ps.setInt(5, employeeSSN);
+                    ps.setInt(6, accountNo);
+
+                    ps.execute();
+
+                    sql = "INSERT INTO Includes VALUES (?, ?, ?, ?, ?);";
+
+                    ps = con.prepareStatement(sql);
+
+                    ps.setInt(1, resrNo);
+                    ps.setString(2, selectedFlight.airlineID);
+                    ps.setInt(3, selectedFlight.flightNo);
+                    ps.setInt(4, selectedFlight.legNo);
+                    ps.setDate(5, new java.sql.Date(selectedFlight.deptTime.getTime()));
+
+                    ps.execute();
+
+                    sql = "INSERT INTO ReservationPassenger VALUES(?, ?, ?, ?, ?, ?);";
+
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, resrNo);
+                    ps.setInt(2, personID);
+                    ps.setInt(3, accountNo);
+                    ps.setString(4, ("" + seatNo));
+                    ps.setString(5, selectedFlight.seatClass);
+                    ps.setString(6, mealPreference);
+
+                    ps.execute();
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
                 }
-                
-                sql = "Insert into passenger (Id, AccountNo) values (?,?) ON DUPLICATE KEY UPDATE Id=Id;";
-                
-                ps = con.prepareStatement(sql);
-                ps.setInt(1, personID);
-                ps.setInt(2, accountNo);
-                
-                ps.execute();
-                
-                sql ="INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
-                
-                ps = con.prepareStatement(sql);
-                ps.setInt(1, resrNo);
-                ps.setTimestamp(2, new java.sql.Timestamp(new Date().getTime()));
-                ps.setDouble(3, (selectedFlight.fare * .10));
-                ps.setDouble(4, selectedFlight.fare);
-                ps.setInt(5, 0);
-                ps.setInt(6, accountNo);
-
-
-                
-                ps.execute();
-                
-                sql = "INSERT INTO Includes VALUES (?, ?, ?, ?, ?);";
-                
-                ps = con.prepareStatement(sql);
-                
-                ps.setInt(1, resrNo);
-                ps.setString(2, selectedFlight.airlineID);
-                ps.setInt(3, selectedFlight.flightNo);
-                ps.setInt(4, selectedFlight.legNo);
-                ps.setDate(5, new java.sql.Date(selectedFlight.deptTime.getTime()));
-                
-                
-                ps.execute();
-                
-                sql = "INSERT INTO ReservationPassenger VALUES(?, ?, ?, ?, ?, ?);";
-                
-                ps = con.prepareStatement(sql);
-                ps.setInt(1, resrNo);
-                ps.setInt(2, personID);
-                ps.setInt(3, accountNo);
-                ps.setString(4, (""+seatNo));
-                ps.setString(5, selectedFlight.seatClass);
-                ps.setString(6, mealPreference);
-                
-                
-                ps.execute();
-
-                
-                
-                
             }
 
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             try {
+                con.setAutoCommit(true);
                 con.close();
                 ps.close();
             } catch (Exception e) {
@@ -243,8 +239,8 @@ public class flightSearch {
             }
         }
     }
-    
-    public void reserveRoundTripTicket(){
+
+    public void reserveRoundTripTicket() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -255,92 +251,91 @@ public class flightSearch {
         PreparedStatement ps = null;
         Connection con = null;
         ResultSet rs;
-        
+
         try {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
+                con.setAutoCommit(false);
                 String sql = "SELECT max(ResrNo) FROM reservation;";
                 ps = con.prepareStatement(sql);
-                
-                ps.execute();
-                rs = ps.getResultSet();
-                int resrNo = -1;
-                
-                if(rs.next()){
-                    resrNo = rs.getInt(1) + 1;
+                try {
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    int resrNo = -1;
+
+                    if (rs.next()) {
+                        resrNo = rs.getInt(1) + 1;
+                    }
+
+                    sql = "Insert into passenger (Id, AccountNo) values (?,?) ON DUPLICATE KEY UPDATE Id=Id;";
+
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, personID);
+                    ps.setInt(2, accountNo);
+
+                    ps.execute();
+
+                    sql = "INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
+
+                    double fare = selectedFlight.fare + selectedReturnFlight.fare;
+
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, resrNo);
+                    ps.setTimestamp(2, new java.sql.Timestamp(new Date().getTime()));
+                    ps.setDouble(3, (fare * .10));
+                    ps.setDouble(4, fare);
+                    ps.setInt(5, employeeSSN);
+                    ps.setInt(6, accountNo);
+
+                    ps.execute();
+
+                    sql = "INSERT INTO Includes VALUES (?, ?, ?, ?, ?);";
+
+                    ps = con.prepareStatement(sql);
+
+                    ps.setInt(1, resrNo);
+                    ps.setString(2, selectedFlight.airlineID);
+                    ps.setInt(3, selectedFlight.flightNo);
+                    ps.setInt(4, selectedFlight.legNo);
+                    ps.setDate(5, new java.sql.Date(selectedReturnFlight.deptTime.getTime()));
+
+                    ps.execute();
+
+                    sql = "INSERT INTO Includes VALUES (?, ?, ?, ?, ?);";
+
+                    ps = con.prepareStatement(sql);
+
+                    ps.setInt(1, resrNo);
+                    ps.setString(2, selectedReturnFlight.airlineID);
+                    ps.setInt(3, selectedReturnFlight.flightNo);
+                    ps.setInt(4, selectedReturnFlight.legNo);
+                    ps.setDate(5, new java.sql.Date(selectedReturnFlight.deptTime.getTime()));
+
+                    ps.execute();
+
+                    sql = "INSERT INTO ReservationPassenger VALUES(?, ?, ?, ?, ?, ?);";
+
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, resrNo);
+                    ps.setInt(2, personID);
+                    ps.setInt(3, accountNo);
+                    ps.setString(4, ("" + seatNo));
+                    ps.setString(5, selectedFlight.seatClass);
+                    ps.setString(6, mealPreference);
+
+                    ps.execute();
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
                 }
-                
-                sql = "Insert into passenger (Id, AccountNo) values (?,?) ON DUPLICATE KEY UPDATE Id=Id;";
-                
-                ps = con.prepareStatement(sql);
-                ps.setInt(1, personID);
-                ps.setInt(2, accountNo);
-                
-                ps.execute();
-                
-                sql ="INSERT INTO Reservation VALUES (?, ?, ?, ?, ?,?); ";
-                
-                double fare = selectedFlight.fare + selectedReturnFlight.fare;
-                
-                ps = con.prepareStatement(sql);
-                ps.setInt(1, resrNo);
-                ps.setTimestamp(2, new java.sql.Timestamp(new Date().getTime()));
-                ps.setDouble(3, (fare * .10));
-                ps.setDouble(4, fare);
-                ps.setInt(5, 0);
-                ps.setInt(6, accountNo);
-
-                
-                ps.execute();
-                
-                sql = "INSERT INTO Includes VALUES (?, ?, ?, ?, ?);";
-                
-                ps = con.prepareStatement(sql);
-                
-                ps.setInt(1, resrNo);
-                ps.setString(2, selectedFlight.airlineID);
-                ps.setInt(3, selectedFlight.flightNo);
-                ps.setInt(4, selectedFlight.legNo);
-                ps.setDate(5, new java.sql.Date(selectedReturnFlight.deptTime.getTime()));
-                
-                ps.execute();
-                
-                sql = "INSERT INTO Includes VALUES (?, ?, ?, ?, ?);";
-                
-                ps = con.prepareStatement(sql);
-                
-                ps.setInt(1, resrNo);
-                ps.setString(2, selectedReturnFlight.airlineID);
-                ps.setInt(3, selectedReturnFlight.flightNo);
-                ps.setInt(4, selectedReturnFlight.legNo);
-                ps.setDate(5, new java.sql.Date(selectedReturnFlight.deptTime.getTime()));
-                
-
-                ps.execute();
-                
-                sql = "INSERT INTO ReservationPassenger VALUES(?, ?, ?, ?, ?, ?);";
-                
-                ps = con.prepareStatement(sql);
-                ps.setInt(1, resrNo);
-                ps.setInt(2, personID);
-                ps.setInt(3, accountNo);
-                ps.setString(4, (""+seatNo));
-                ps.setString(5, selectedFlight.seatClass);
-                ps.setString(6, mealPreference);
-                
-                
-                ps.execute();
-
-                
-                
-                
             }
 
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             try {
+                con.setAutoCommit(true);
                 con.close();
                 ps.close();
             } catch (Exception e) {
@@ -348,13 +343,12 @@ public class flightSearch {
             }
         }
     }
- 
+
     private static final ArrayList<Flight> flightResults = new ArrayList<Flight>();
     private static final ArrayList<Flight> flightReturnResults = new ArrayList<Flight>();
     private static final ArrayList<Flight> bestSellingFlights = new ArrayList<Flight>();
-  
-    
-    
+    private static final ArrayList<Flight> recommendFlights = new ArrayList<Flight>();
+
     private static Flight selectedFlight;
     private static Flight selectedReturnFlight;
 
@@ -365,8 +359,6 @@ public class flightSearch {
     public void setSelectedReturnFlight(Flight selectedReturnFlight) {
         flightSearch.selectedReturnFlight = selectedReturnFlight;
     }
-    
-    
 
     public int getEmployeeSSN() {
         return employeeSSN;
@@ -400,9 +392,6 @@ public class flightSearch {
         this.mealPreference = mealPreference;
     }
 
-
-
-
     public Flight getSelectedFlight() {
         return selectedFlight;
     }
@@ -410,7 +399,7 @@ public class flightSearch {
     public void setSelectedFlight(Flight selectedFlight) {
         flightSearch.selectedFlight = selectedFlight;
     }
-    
+
     public ArrayList<Flight> getFlightResults() {
         return flightResults;
     }
@@ -419,11 +408,14 @@ public class flightSearch {
         return bestSellingFlights;
     }
 
+    public ArrayList<Flight> getRecommendFlights() {
+        return recommendFlights;
+    }
+
     public ArrayList<Flight> getFlightReturnResults() {
         return flightReturnResults;
     }
 
-    
     public String getFlightFrom() {
         return flightFrom;
     }
@@ -484,34 +476,38 @@ public class flightSearch {
                 ps.setString(1, flightFrom);
                 ps.setString(2, flightTo);
                 ps.setDate(3, new java.sql.Date(departing.getTime()));
-                ps.setDate(4, new java.sql.Date(departing.getTime() + + (1000 * 60 * 60 * 24)));
-                ps.execute();
+                ps.setDate(4, new java.sql.Date(departing.getTime() + +(1000 * 60 * 60 * 24)));
+                try {
+                    ps.execute();
 
-                sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, A.LegNo, A.AirlineID, B.ArrAirportID\n" +
-                      "From searchresults A, searchresults B\n" +
-                      "Where ((A.ArrAirportID = B.DepAirportID) OR (A.DepAirportID = ? AND B.ArrAirportID = ?))";
-                
-                ps = con.prepareStatement(sql);
-                ps.setString(1, flightFrom);
-                ps.setString(2, flightTo);
-                ps.execute();
-                rs = ps.getResultSet();
-                flightResults.removeAll(flightResults);
-                int i = 0;
-                while(rs.next()){
-                    //flightResults.add()
-                    flightResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"), 
-                             rs.getString("Class"), rs.getDouble("fare"),rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
-                    i++;
+                    sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, A.LegNo, A.AirlineID, B.ArrAirportID\n"
+                            + "From searchresults A, searchresults B\n"
+                            + "Where ((A.ArrAirportID = B.DepAirportID) OR (A.DepAirportID = ? AND B.ArrAirportID = ?))";
+
+                    ps = con.prepareStatement(sql);
+                    ps.setString(1, flightFrom);
+                    ps.setString(2, flightTo);
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    flightResults.removeAll(flightResults);
+                    int i = 0;
+                    while (rs.next()) {
+                        //flightResults.add()
+                        flightResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"),
+                                rs.getString("Class"), rs.getDouble("fare"), rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
+                        i++;
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
                 }
-                
-                
             }
 
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             try {
+                con.setAutoCommit(true);
                 con.close();
                 ps.close();
             } catch (Exception e) {
@@ -520,7 +516,7 @@ public class flightSearch {
         }
 
     }
-    
+
     public void searchBestSellingFlights() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -536,29 +532,39 @@ public class flightSearch {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
-                String sql = "SELECT * FROM FlightReservation ORDER BY ResrCount DESC";
-                ps = con.prepareStatement(sql);
-                                
-                ps.execute();
+                con.setAutoCommit(false);
+                String sql = "CREATE OR Replace VIEW FlightReservation(AirlineID, FlightNo, ResrCount) \n"
+                        + "AS \n"
+                        + "SELECT I.AirlineID, I.FlightNo, COUNT(DISTINCT I.ResrNo) \n"
+                        + "FROM Includes I \n"
+                        + "GROUP BY I.AirlineID, I.FlightNo";
 
-            
-                rs = ps.getResultSet();
-                bestSellingFlights.removeAll(bestSellingFlights);
-                int i = 0;
-                while(rs.next()){
-                    //flightResults.add()
-                    bestSellingFlights.add(new Flight("", rs.getString("AirlineID"), rs.getInt("FlightNo"), null, null, 
-                             "", 0,"", "", 0, 0));
-                    i++;
+                ps = con.prepareStatement(sql);
+                try {
+                    ps.execute();
+
+                    sql = "SELECT * FROM FlightReservation ORDER BY ResrCount DESC";
+                    ps = con.prepareStatement(sql);
+
+                    ps.execute();
+
+                    rs = ps.getResultSet();
+                    bestSellingFlights.removeAll(bestSellingFlights);
+                    while (rs.next()) {
+                        //flightResults.add()
+                        bestSellingFlights.add(new Flight(rs.getString("AirlineID"), rs.getInt("FlightNo")));
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
                 }
-                
-                
             }
 
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             try {
+                con.setAutoCommit(true);
                 con.close();
                 ps.close();
             } catch (Exception e) {
@@ -567,8 +573,70 @@ public class flightSearch {
         }
 
     }
-    
-    public void searchRoundTripFlights(){
+
+    public void searchRecommendedFlights() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                con.setAutoCommit(false);
+                String sql = "CREATE OR Replace VIEW FlightReservation(AirlineID, FlightNo, ResrCount) \n"
+                        + "AS \n"
+                        + "SELECT I.AirlineID, I.FlightNo, COUNT(DISTINCT I.ResrNo) \n"
+                        + "FROM Includes I \n"
+                        + "GROUP BY I.AirlineID, I.FlightNo";
+
+                ps = con.prepareStatement(sql);
+
+                ps.execute();
+                try {
+                    sql = "SELECT * FROM FlightReservation FR \n"
+                            + "WHERE NOT EXISTS ( \n"
+                            + " SELECT * FROM Reservation R, Includes I \n"
+                            + " WHERE R.ResrNo = I.ResrNo AND FR.AirlineID = I.AirlineID \n"
+                            + " AND FR.FlightNo = I.FlightNo AND R.AccountNo = ?) \n"
+                            + "ORDER BY FR.ResrCount DESC";
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, accountNo);
+                    ps.execute();
+
+                    rs = ps.getResultSet();
+                    recommendFlights.removeAll(recommendFlights);
+                    while (rs.next()) {
+                        //flightResults.add()
+                        recommendFlights.add(new Flight(rs.getString("AirlineID"), rs.getInt("FlightNo")));
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.setAutoCommit(true);
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void searchRoundTripFlights() {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -584,6 +652,7 @@ public class flightSearch {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
+                con.setAutoCommit(true);
                 String sql = "Create OR Replace view SearchResults(Name, FlightNo, DepTime, ArrTime, DepAirportID, ArrAirportID, LegNo, Class, fare, AirlineID)\n"
                         + "as\n"
                         + "SELECT DISTINCT R.Name, L.FlightNo, L.DepTime, L.ArrTime, L.DepAirportId, L.ArrAirportId, L.LegNo, M.Class, M.Fare, L.AirlineID\n"
@@ -596,35 +665,38 @@ public class flightSearch {
                 ps.setString(1, flightTo);
                 ps.setString(2, flightFrom);
                 ps.setDate(3, new java.sql.Date(returning.getTime()));
-                ps.setDate(4, new java.sql.Date(returning.getTime() + + (1000 * 60 * 60 * 24)));
-                ps.execute();
+                ps.setDate(4, new java.sql.Date(returning.getTime() + +(1000 * 60 * 60 * 24)));
+                try {
+                    ps.execute();
 
+                    sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, A.LegNo, A.AirlineID, B.ArrAirportID\n"
+                            + "From searchresults A, searchresults B\n"
+                            + "Where ((A.ArrAirportID = B.DepAirportID) OR (A.DepAirportID = ? AND B.ArrAirportID = ?))";
 
-                sql = "select Distinct A.Name, A.FlightNo, A.DepTime, B.ArrTime ,A.class, A.fare, A.DepAirportID, A.LegNo, A.AirlineID, B.ArrAirportID\n" +
-                      "From searchresults A, searchresults B\n" +
-                      "Where ((A.ArrAirportID = B.DepAirportID) OR (A.DepAirportID = ? AND B.ArrAirportID = ?))";
-                
-                ps = con.prepareStatement(sql);
-                ps.setString(1, flightTo);
-                ps.setString(2, flightFrom);
-                ps.execute();
-                rs = ps.getResultSet();
-                flightReturnResults.removeAll(flightReturnResults);
-                int i = 0;
-                while(rs.next()){
-                    //flightResults.add()
-                    flightReturnResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"), 
-                             rs.getString("Class"), rs.getDouble("fare"),rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
-                    i++;
+                    ps = con.prepareStatement(sql);
+                    ps.setString(1, flightTo);
+                    ps.setString(2, flightFrom);
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    flightReturnResults.removeAll(flightReturnResults);
+                    int i = 0;
+                    while (rs.next()) {
+                        //flightResults.add()
+                        flightReturnResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"),
+                                rs.getString("Class"), rs.getDouble("fare"), rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
+                        i++;
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
                 }
-                
-                
             }
 
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             try {
+                con.setAutoCommit(true);
                 con.close();
                 ps.close();
             } catch (Exception e) {
@@ -650,21 +722,27 @@ public class flightSearch {
 
             con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
             if (con != null) {
+                con.setAutoCommit(false);
                 String sql = "SELECT id From airport";
                 ps = con.prepareStatement(sql);
-                ps.execute();
-                rs = ps.getResultSet();
+                try {
+                    ps.execute();
+                    rs = ps.getResultSet();
 
-                while (rs.next()) {
-                    results.add(rs.getString("id"));
+                    while (rs.next()) {
+                        results.add(rs.getString("id"));
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
                 }
-
             }
 
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             try {
+                con.setAutoCommit(true);
                 con.close();
                 ps.close();
             } catch (Exception e) {
@@ -680,10 +758,11 @@ public class flightSearch {
 
     public void setFlightDirection(String flightDirection) {
         this.flightDirection = flightDirection;
+
     }
 
-
     public static class Flight {
+
         private String airline;
         private String airlineID;
         private int flightNo;
@@ -695,7 +774,7 @@ public class flightSearch {
         private String arrAirport;
         private int UID;
         private int legNo;
-        
+
         public String getAirline() {
             return airline;
         }
@@ -704,11 +783,15 @@ public class flightSearch {
             return flightNo;
         }
 
-        public Date getDeptTime() {
+        public String getAirlineID() {
+            return airlineID;
+        }
+
+        public Timestamp getDeptTime() {
             return deptTime;
         }
 
-        public Date getArrTime() {
+        public Timestamp getArrTime() {
             return arrTime;
         }
 
@@ -740,7 +823,10 @@ public class flightSearch {
             return legNo;
         }
 
-        
+        public Flight(String airlineID, int flightNo) {
+            this.airlineID = airlineID;
+            this.flightNo = flightNo;
+        }
 
         public Flight(String airlineID, String airline, int flightNo, Timestamp deptTime, Timestamp arrTime, String seatClass, double fare, String deptAirport, String arrAirport, int UID, int legNo) {
             this.airline = airline;
@@ -760,8 +846,7 @@ public class flightSearch {
         public String toString() {
             return "Flight{" + "airline=" + airline + ", airlineID=" + airlineID + ", flightNo=" + flightNo + ", deptTime=" + deptTime + ", arrTime=" + arrTime + ", seatClass=" + seatClass + ", fare=" + fare + ", deptAirport=" + deptAirport + ", arrAirport=" + arrAirport + ", UID=" + UID + ", legNo=" + legNo + '}';
         }
-        
-        
+
     }
 
 }

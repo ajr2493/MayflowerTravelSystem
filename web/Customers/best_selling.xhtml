@@ -17,11 +17,13 @@
         </script>
         #{flightSearch.searchBestSellingFlights()}
         <h:form>
-            <p:dataTable id="cars" var="flight" value="#{flightSearch.bestSellingFlights}">
+            <p:dataTable id="bestSelling" var="flight" value="#{flightSearch.bestSellingFlights}">
 
-
+                <f:facet name="header">
+                    Best Selling Flights in Order of Best to Worst
+                </f:facet>
                 <p:column headerText="Airline">
-                    #{flight.airline}
+                    #{flight.airlineID}
                 </p:column>
 
                 <p:column headerText="Flight No.">
@@ -30,7 +32,7 @@
             </p:dataTable>
 
         </h:form>
-
+         <p:commandButton id="mainMenu" value="Go Home" action="main?faces-redirect=true"></p:commandButton>
     </h:body>
 </html>
 

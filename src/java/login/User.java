@@ -138,48 +138,55 @@ public class User {
 
                 con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
                 if (con != null) {
-                    String sql = "INSERT INTO customer(email, password, creditcardno,creationdate,rating, accountno, id) VALUES(?,?,?,?,?,?,?)";
-                    ps = con.prepareStatement(sql);
-                    ps.setString(1, name);
-                    ps.setString(2, password);
-                    ps.setString(3, cardNum);
-                    java.util.Date utilDate = new java.util.Date();
-                    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-                    ps.setDate(4, sqlDate);
-                    ps.setInt(5, 0);
+                    con.setAutoCommit(false);
+                    try {
+                        String sql = "INSERT INTO customer(email, password, creditcardno,creationdate,rating, accountno, id) VALUES(?,?,?,?,?,?,?)";
+                        ps = con.prepareStatement(sql);
+                        ps.setString(1, name);
+                        ps.setString(2, password);
+                        ps.setString(3, cardNum);
+                        java.util.Date utilDate = new java.util.Date();
+                        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+                        ps.setDate(4, sqlDate);
+                        ps.setInt(5, 0);
 
-                    String sql2 = "SELECT MAX(accountno) FROM customer";
-                    ps2 = con.prepareStatement(sql2);
-                    rs = ps2.executeQuery();
-                    rs.next();
-                    int accNo = rs.getInt(1) + 1;
-                    ps.setInt(6, accNo);
+                        String sql2 = "SELECT MAX(accountno) FROM customer";
+                        ps2 = con.prepareStatement(sql2);
+                        rs = ps2.executeQuery();
+                        rs.next();
+                        int accNo = rs.getInt(1) + 1;
+                        ps.setInt(6, accNo);
 
-                    String sql3 = "SELECT MAX(id) FROM person";
-                    ps3 = con.prepareStatement(sql3);
-                    rs = ps3.executeQuery();
-                    rs.next();
-                    int id = rs.getInt(1) + 1;
-                    ps.setInt(7, id);
+                        String sql3 = "SELECT MAX(id) FROM person";
+                        ps3 = con.prepareStatement(sql3);
+                        rs = ps3.executeQuery();
+                        rs.next();
+                        int id = rs.getInt(1) + 1;
+                        ps.setInt(7, id);
 
-                    //todo create new person row in person table with id
-                    String sql4 = "INSERT INTO person(id,firstname,lastname,address,city,state,zipcode) VALUES(?,?,?,?,?,?,?)";
-                    ps4 = con.prepareStatement(sql4);
-                    ps4.setInt(1, id);
-                    ps4.setString(2, fname);
-                    ps4.setString(3, lname);
-                    ps4.setString(4, address);
-                    ps4.setString(5, city);
-                    ps4.setString(6, state);
-                    ps4.setInt(7, zip);
-                    j = ps4.executeUpdate();
-                    i = ps.executeUpdate();
+                        //todo create new person row in person table with id
+                        String sql4 = "INSERT INTO person(id,firstname,lastname,address,city,state,zipcode) VALUES(?,?,?,?,?,?,?)";
+                        ps4 = con.prepareStatement(sql4);
+                        ps4.setInt(1, id);
+                        ps4.setString(2, fname);
+                        ps4.setString(3, lname);
+                        ps4.setString(4, address);
+                        ps4.setString(5, city);
+                        ps4.setString(6, state);
+                        ps4.setInt(7, zip);
+                        j = ps4.executeUpdate();
+                        i = ps.executeUpdate();
+                        con.commit();
+                    } catch (Exception e) {
+                        con.rollback();
+                    }
                 }
 
             } catch (Exception e) {
                 System.out.println(e);
             } finally {
                 try {
+                    con.setAutoCommit(true);
                     con.close();
                     ps.close();
                     ps2.close();
@@ -214,16 +221,30 @@ public class User {
             try {
                 con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
                 if (con != null) {
-                    String sql = "select email,password from customer where email = '"
-                            + uName + "'";
-                    ps = con.prepareStatement(sql);
-                    rs = ps.executeQuery();
-                    rs.next();
-                    dbName = rs.getString("Email");
-                    dbPassword = rs.getString("password");
+                    con.setAutoCommit(false);
+                    try {
+                        String sql = "select email,password from customer where email = '"
+                                + uName + "'";
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+                        rs.next();
+                        dbName = rs.getString("Email");
+                        dbPassword = rs.getString("password");
+                        con.commit();
+                    } catch (Exception e) {
+                        con.rollback();
+                    }
                 }
             } catch (SQLException sqle) {
                 sqle.printStackTrace();
+            } finally {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -246,19 +267,31 @@ public class User {
             try {
                 con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
                 if (con != null) {
-                    String sql = "select id,accountNo from customer where email = '"
-                            + name + "'";
-                    ps = con.prepareStatement(sql);
-                    rs = ps.executeQuery();
-                    rs.next();
-                    personID = rs.getInt(1);
-                    accountNo=rs.getInt(2);
+                    con.setAutoCommit(false);
+                    try {
+                        String sql = "select id,accountNo from customer where email = '"
+                                + name + "'";
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+                        rs.next();
+                        personID = rs.getInt(1);
+                        accountNo = rs.getInt(2);
+                    } catch (Exception e) {
+                        con.rollback();
+                    }
                 }
             } catch (SQLException sqle) {
                 sqle.printStackTrace();
+            } finally {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            
-            
+
             //Save account Number in session scope
             FacesContext.getCurrentInstance().getExternalContext()
                     .getSessionMap().put("accountNo", accountNo);
