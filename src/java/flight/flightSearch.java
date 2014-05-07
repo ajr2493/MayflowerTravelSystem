@@ -351,6 +351,7 @@ public class flightSearch {
  
     private static final ArrayList<Flight> flightResults = new ArrayList<Flight>();
     private static final ArrayList<Flight> flightReturnResults = new ArrayList<Flight>();
+    private static final ArrayList<Flight> bestSellingFlights = new ArrayList<Flight>();
   
     
     
@@ -412,6 +413,10 @@ public class flightSearch {
     
     public ArrayList<Flight> getFlightResults() {
         return flightResults;
+    }
+
+    public ArrayList<Flight> getBestSellingFlights() {
+        return bestSellingFlights;
     }
 
     public ArrayList<Flight> getFlightReturnResults() {
@@ -497,6 +502,53 @@ public class flightSearch {
                     //flightResults.add()
                     flightResults.add(new Flight(rs.getString("AirlineID"), rs.getString("Name"), rs.getInt("FlightNo"), rs.getTimestamp("DepTime"), rs.getTimestamp("ArrTime"), 
                              rs.getString("Class"), rs.getDouble("fare"),rs.getString("DepAirportID"), rs.getString("ArrAirportID"), i, rs.getInt("LegNo")));
+                    i++;
+                }
+                
+                
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    
+    public void searchBestSellingFlights() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                String sql = "SELECT * FROM FlightReservation ORDER BY ResrCount DESC";
+                ps = con.prepareStatement(sql);
+                                
+                ps.execute();
+
+            
+                rs = ps.getResultSet();
+                bestSellingFlights.removeAll(bestSellingFlights);
+                int i = 0;
+                while(rs.next()){
+                    //flightResults.add()
+                    bestSellingFlights.add(new Flight("", rs.getString("AirlineID"), rs.getInt("FlightNo"), null, null, 
+                             "", 0,"", "", 0, 0));
                     i++;
                 }
                 
