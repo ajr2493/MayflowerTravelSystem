@@ -29,7 +29,8 @@ public class myReservations {
      * Creates a new instance of myReservations
      */
     private static final ArrayList<TableReservation> reservations = new ArrayList<TableReservation>();
-
+    private static TableReservation selectedReservation;
+    
     
     private int accountNo = (Integer) FacesContext.getCurrentInstance().getExternalContext()
                 .getSessionMap().get("accountNo");
@@ -40,11 +41,62 @@ public class myReservations {
         return reservations;
     }
 
+    public  TableReservation getSelectedReservation() {
+        return selectedReservation;
+    }
 
+    public void setSelectedReservation(TableReservation selectedReservation) {
+        myReservations.selectedReservation = selectedReservation;
+    }
+
+    
 
     public myReservations() {
     }
 
+    public void cancelReservation(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                String sql = "DELETE FROM Includes WHERE ResrNo = ? ";
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, selectedReservation.resrNo);
+                ps.execute();
+                
+                sql = "DELETE FROM ReservationPassenger WHERE ResrNo = ? ";
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, selectedReservation.resrNo);
+                ps.execute();
+                
+                sql = "DELETE FROM Reservation WHERE ResrNo  = ? ";
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, selectedReservation.resrNo);
+                ps.execute();
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public void myReservations() {
         reservations.removeAll(reservations);
         try {

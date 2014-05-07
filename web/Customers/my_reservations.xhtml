@@ -8,48 +8,50 @@
         <title></title>
     </h:head>
     <h:body>
-         <script type="text/javascript">
-                if("#{user.loggedIn}"!="valid"){
-                    window.location.replace("../error.xhtml");
-                }
+        <script type="text/javascript">
+            if ("#{user.loggedIn}" != "valid") {
+                window.location.replace("../error.xhtml");
+            }
 
         </script>
-        
+
         <h1> Your Reservations </h1>
         #{myReservations.myReservations()}
-        <p:dataTable value="#{myReservations.reservations}" var="o"
-    			styleClass="reservation-table"
-    			
-    		>
- 
-    			<p:column>
-    				<!-- column header -->
-    				<f:facet name="header">Reservation Numbers</f:facet>
-    				<!-- row record -->
-                                #{o.resrNo}
-    			</p:column>
- 
-    			<p:column>
-    				<f:facet name="header">Reservation Date</f:facet>
-    				#{o.resrDate}
-    			</p:column>
- 
-    			<p:column>
-    				<f:facet name="header">Booking Fee</f:facet>
-    				#{o.bookingFee}
-    			</p:column>
- 
-    			<p:column>
-    				<f:facet name="header">Total Fare</f:facet>
-    				#{o.totalFare}
-    			</p:column>
- 
-                            			<p:column>
-                        <f:facet name="header">Representative's SSN</f:facet>
-    				#{o.repSSN}
-    			</p:column>
-    		</p:dataTable>
- 
+        <h:form id="form">
+            <h:panelGrid id="display">
+            <p:dataTable value="#{myReservations.reservations}" var="o" rowKey="#{o.resrNo}" selectionMode="single"
+                         selection="#{myReservations.selectedReservation}" styleClass="reservation-table">
+
+                <f:facet name="header">
+                    Here is a list of your reservations <br />
+                    Click a row and click Cancel to cancel a reservation
+                </f:facet>
+                <p:column headerText="Reservation Numbers">
+                    #{o.resrNo}
+                </p:column>
+
+                <p:column headerText="Reservation Date">
+                    #{o.resrDate}
+                </p:column>
+
+                <p:column headerText="Booking Fee">
+                    #{o.bookingFee}
+                </p:column>
+
+                <p:column headerText="Total Fare">
+                    #{o.totalFare}
+                </p:column>
+
+                <p:column headerText="Representative's SSN">
+                    #{o.repSSN}
+                </p:column>
+                <f:facet name="footer">
+                    <p:commandButton id="reserveButton" update=":form:display" process="@all" value="Cancel" action="my_reservation?faces-redirect=true" actionListener="#{myReservations.cancelReservation()}"  icon="ui-icon-circle-close"/>
+                </f:facet>
+            </p:dataTable>
+            </h:panelGrid>
+        </h:form>
+        <p:commandButton id="mainMenu" value="Go Home" action="main?faces-redirect=true"></p:commandButton>
     </h:body>
 </html>
 
