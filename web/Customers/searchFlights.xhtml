@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>Search Flights</title>
         <script type="text/javascript">
@@ -18,9 +19,13 @@
             function testJs(type) {
                 if (type == "One-Way") {
                     document.getElementById("returning").style.display = "none";
+                    document.getElementById("roundTrip").style.display = "none";
+                    document.getElementById("oneWay").style.display = "block";
                 }
                 else {
                     document.getElementById("returning").style.display = "block";
+                    document.getElementById("roundTrip").style.display = "block";
+                    document.getElementById("oneWay").style.display = "none";
                 }
 
             }
@@ -57,8 +62,12 @@
                     <p:calendar value="#{flightSearch.returning}" />
                 </h:panelGrid>
             </div>
-
-            <h:commandButton value="Search" action="flightResultsRoundTrip" />
+            <div id="roundTrip">
+                <h:commandButton value="Search" action="flightResultsRoundTrip" />
+            </div>
+            <div id="oneWay" style="display:none">
+                <h:commandButton value="Search" action="flightResults" />
+            </div>
         </h:form>
     </h:body>
 </html>
