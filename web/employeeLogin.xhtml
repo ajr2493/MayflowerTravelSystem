@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+<title>Employee Login Page</title>
+</h:head>
+<h:body>
+<f:view>
+<h:form id="loginForm">
+<table frame="box">
+<tr>
+<th>Employee Login</th>
+</tr>
+<tr>
+<td> <h:outputText value="Enter Your ID Number : "/> </td>
+<td> <h:inputText id="inputName" value="#{emp.name}" required="true" 
+requiredMessage="ID field must not be empty"/> </td>
+<td><h:message for="inputName" style="color:red"/></td>
+</tr>
+<tr>
+<td> <h:outputText value="Enter SSN :"/> </td>
+<td> <h:inputSecret id="inputPassword" value="#{emp.password}" required="true" 
+requiredMessage="SSN field must not be empty"/> </td>
+<td><h:message for="inputPassword" style="color:red"/></td>
+</tr>
+    <center>
+<tr>
+    <td><center><p:commandButton value="Sign In" actionListener="#{emp.login()}" action="Customers/employeeMain?faces-redirect=true"/></center></td>
+</tr></center>
+</table>
+</h:form>
+</f:view>
+</h:body>
+</html>
+

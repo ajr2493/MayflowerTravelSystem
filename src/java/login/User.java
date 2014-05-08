@@ -204,7 +204,7 @@ public class User {
             return "unsuccess";
         }
     }
-
+    
     public void dbData(String uName) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -249,7 +249,52 @@ public class User {
 
         }
     }
+    public void storeInfo(){
+        System.out.println("Reached storeInfo Method");
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("email", name);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("loggedIn", "valid");
+        //find personID and accountNo for this email and store in sessionmap
+        PreparedStatement ps = null;
+            Connection con = null;
+            ResultSet rs = null;
+            int personID = 0;
+            int accountNo = 0;
+            //get account number and personid from database
+            try {
+                con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+                if (con != null) {
+                    con.setAutoCommit(false);
+                    try {
+                        String sql = "select id,accountNo from customer where email = '"
+                                + name + "'";
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+                        rs.next();
+                        personID = rs.getInt(1);
+                        accountNo = rs.getInt(2);
+                    } catch (Exception e) {
+                        con.rollback();
+                    }
+                }
+            } catch (SQLException sqle) {
+                sqle.printStackTrace();
+            } finally {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
+            //Save account Number in session scope
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .getSessionMap().put("accountNo", accountNo);
+            //save personid in session scope
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .getSessionMap().put("personID", personID);
+    }
     public String login() {
         dbData(name);
         if ((name.toUpperCase().equals(dbName.toUpperCase()) && password.equals(dbPassword))) {
