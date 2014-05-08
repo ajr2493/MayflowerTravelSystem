@@ -14,10 +14,11 @@
             }
         </script>
         <h:form>
-        <h1>
+        <h3>
             Sorry, one or more of your bids was not accepted<br />
             Please review your bid history and try again another time
-        </h1>        
+        </h3>        
+        <p:commandButton id="bidHistory" value="Bid History" action="auctionList?faces-redirect=true"></p:commandButton>
         <p:commandButton id="mainMenu" value="Go Home" action="main?faces-redirect=true"></p:commandButton>
         </h:form>
     </h:body>
