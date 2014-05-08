@@ -19,7 +19,7 @@
         <center><p:commandButton id="mainMenu" value="Back" onclick="back()"></p:commandButton></center>
         <h:form>
             <p:menu>
-                <p:submenu label="How Can I...?">
+                <p:submenu label="Customers: How Can I...?">
                     <p:menuitem value="Log In To The System"  onclick="document.getElementById('login').scrollIntoView()"></p:menuitem>
                     <p:menuitem value="Create An Account"  onclick="document.getElementById('createAccount').scrollIntoView()"></p:menuitem>
                     <p:menuitem value="See My Reservations" onclick="document.getElementById('viewRes').scrollIntoView()"></p:menuitem>
@@ -30,8 +30,15 @@
                     <p:menuitem value="Make A Reverse Auction Bid" onclick="document.getElementById('bid').scrollIntoView()"></p:menuitem>
                     <p:menuitem value="See My Bid History" onclick="document.getElementById('viewBid').scrollIntoView()"></p:menuitem>
                 </p:submenu>
+                <p:submenu label='Employees'>
+                    <p:menuitem value = "Logging In" onclick="document.getElementById('logine').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="Assisting a Customer" onclick="document.getElementById('assist').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="View Mailing List" onclick="document.getElementById('mail').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="Modifying Users" onclick="document.getElementById('modify').scrollIntoView()"></p:menuitem>
+                </p:submenu>
             </p:menu>
         </h:form>
+        <h2>Customers</h2>
         <h3 id="login">Logging In</h3>
         <ol>
             <li>From the home page click the link, "Sign In".  You are redirected to a login page.</li>
@@ -101,6 +108,31 @@
             <li>The resulting screen displays a list of flights you have bid on.</li>
             <li>Click a row and select "Full History" to see all of the bids you have made for that flight</li>
             <li>Click a row and select "Current Bid" to see your current bid for that flight</li>
+        </ol>
+        
+        <h2>Employees</h2>
+        <h3 id="logine">Logging In</h3>
+        <ol>
+            <li>From the welcome page, click "Employee Login".  This will redirect you to the employee login page.</li>
+            <li>Enter your ID number and social security number into the marked textfields, and submit.</li>
+        </ol>
+        <h3 id="assist">Assist User</h3>
+        <ol>
+            <li>From the Employee menu, click "Assist User".</li>
+            <li>You are directed to a form for selecting a user based on their email address.  Choose the account to take control of by selecting that account from the dropdown.</li>
+            <li>Click "Go Help", and you will be directed to that customer's menu.  From here you can perform any of the customer's use cases.</li>
+        </ol>
+        
+        <h3 id="mail">View Customer Mailing List</h3>
+        <ol>
+            <li>From the employee menu, click "View Customer Mailing List", and the list of email addresses of customers appears.</li>
+        </ol>
+        <h3 id="modify">Modify Users</h3>
+        <ol>
+            <li>Click "modify users" from the employee home page.  A list of customers appears.</li>
+            <li>Select any customer in the chart and click "delete" to remove this customer from the system.</li>
+            <li>Select any customer in the chart and click "edit" to edit the customer's information.  Fill out the resulting form and submit to save changes.</li>
+            <li>Clicking "add" allows you to add a new customer to the database by filling out and submitting the resulting form.</li>
         </ol>
     </h:body>
 </html>
