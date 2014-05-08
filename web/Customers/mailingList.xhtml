@@ -2,9 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Employee Home Page</title>
+        <title>Customer Mailing List</title>
     </h:head>
     <h:body>
         <script type="text/javascript">
@@ -14,16 +15,19 @@
 
         </script>
 
+
+        #{emp.produceEmails()}
         <h:form>
-            <p:panelMenu style ="width:400px">
-                <p:submenu label ="Employee Options">
-                    <p:menuitem value="Assist User" outcome="helpUser"></p:menuitem>
-                    <p:menuitem value="View Customer Mailing List" outcome="mailingList"></p:menuitem>
-                </p:submenu>
-                <p:submenu label="Logout">
-                    <p:menuitem value ="Logout" outcome="/home"></p:menuitem>
-                </p:submenu>
-            </p:panelMenu>
+            <p:dataTable id="emails" var="email" value="#{emp.emails}">
+
+                <f:facet name="header">
+                    Customer Email List
+                </f:facet>
+                <p:column headerText="Email Address">
+                    #{email.toString()}
+                </p:column>
+            </p:dataTable>
+
         </h:form>
     </h:body>
 </html>

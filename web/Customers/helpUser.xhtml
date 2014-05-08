@@ -13,9 +13,9 @@
 
         </script>
         <h:form>
-            <h:outputText>Enter Customer's Email</h:outputText>
+            <h:outputText value="Enter Customer's Email"></h:outputText>
             <h:inputText value='#{user.name}'/>
-            <h:commandButton actionListener="#{user.storeInfo()}" action="main?faces-redirect=true">Go</h:commandButton>
+            <h:commandButton value="Go Help" actionListener="#{user.storeInfo()}" action="main?faces-redirect=true"></h:commandButton>
         </h:form>
     </h:body>
 </html>

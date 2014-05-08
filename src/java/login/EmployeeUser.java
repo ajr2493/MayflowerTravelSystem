@@ -10,10 +10,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import reservations.myReservations;
 
 /**
  *
@@ -28,6 +30,7 @@ public class EmployeeUser {
     private static int name;
     private int password;
     private String loggedIn;
+    private static final ArrayList<String> emails = new ArrayList<String>();
 
     /**
      * Creates a new instance of EmployeeUser
@@ -35,10 +38,56 @@ public class EmployeeUser {
     public EmployeeUser() {
     }
 
+    public ArrayList<String> getEmails() {
+        return emails;
+    }
+
     public int getDbName() {
         return dbName;
     }
+    public void produceEmails(){
+        emails.removeAll(emails);
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
 
+        }
+        PreparedStatement ps = null;
+        Connection con = null;
+        ResultSet rs;
+        try {
+
+            con = DriverManager.getConnection("jdbc:mysql://mysql2.cs.stonybrook.edu:3306/mlavina", "mlavina", "108262940");
+            if (con != null) {
+                con.setAutoCommit(false);
+                try {
+                    String sql = "SELECT Email from Customer";
+                    ps = con.prepareStatement(sql);
+                    ps.execute();
+                    rs = ps.getResultSet();
+                    while (rs.next()) {
+                        emails.add(rs.getString("email"));
+                    }
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.setAutoCommit(true);
+                con.close();
+                ps.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public void setDbName(int dbName) {
         this.dbName = dbName;
     }
@@ -128,4 +177,5 @@ public class EmployeeUser {
             return "invalid";
         }
     }
+
 }
