@@ -5,7 +5,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Search Results</title>
     </h:head>
     <h:body>
         <script type="text/javascript">
@@ -60,7 +60,8 @@
                     <p:commandButton id="auctionButton" value="Auction" action="auction"   icon="ui-icon-search"/>
                 </f:facet>
             </p:dataTable>
-
+            <center><p:commandButton id="mainMenu" value="Go Home" action="main?faces-redirect=true"></p:commandButton>
+                <p:commandButton id="searchagain" value="Try Another Search" action="searchFlights?faces-redirect=true"></p:commandButton></center>
         </h:form>
 
     </h:body>

@@ -17,16 +17,16 @@
 
         <script>
             function testJs(type) {
-                
+
                 if (type == "One-Way") {
                     document.getElementById("returning").style.display = "none";
                     document.getElementById("roundTrip").style.display = "none";
                     document.getElementById("oneWay").style.display = "block";
                     document.getElementById("middleFlight").style.display = "none";
                     document.getElementById("multiTrip").style.display = "none";
-                     document.getElementById("j_idt5:secondTime").innerHTML = "Returning Time";
+                    document.getElementById("j_idt5:secondTime").innerHTML = "Returning Time";
                 }
-                else if(type == "Round-Trip") {
+                else if (type == "Round-Trip") {
                     document.getElementById("returning").style.display = "block";
                     document.getElementById("roundTrip").style.display = "block";
                     document.getElementById("oneWay").style.display = "none";
@@ -34,7 +34,7 @@
                     document.getElementById("multiTrip").style.display = "none";
                     document.getElementById("j_idt5:secondTime").innerHTML = "Returning Time";
                 }
-                else{
+                else {
                     document.getElementById("returning").style.display = "block";
                     document.getElementById("roundTrip").style.display = "block";
                     document.getElementById("oneWay").style.display = "none";
@@ -87,13 +87,17 @@
             </div>
             <div id="roundTrip">
                 <p:commandButton value="Search" action="flightResultsRoundTrip" />
+                <p:commandButton value="Cancel" action="main?faces-redirect=true"/>
             </div>
             <div id="oneWay" style="display:none">
                 <p:commandButton value="Search" action="flightResults" />
+                <p:commandButton value="Cancel" action="main?faces-redirect=true"/>
             </div>
             <div id="multiTrip" style="display:none">
                 <p:commandButton value="Search" action="flightResultsMultiTrip" />
+                <p:commandButton value="Cancel" action="main?faces-redirect=true"/>
             </div>
+
         </h:form>
     </h:body>
 </html>

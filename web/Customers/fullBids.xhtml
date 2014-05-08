@@ -36,11 +36,11 @@
                     <p:column headerText="Class">
                         #{o.seatClass}
                     </p:column>
-                    
+
                     <p:column headerText="Date">
                         #{o.date}
                     </p:column>
-                   
+
                     <p:column headerText="Bid">
                         #{o.bid}
                     </p:column>
@@ -52,7 +52,8 @@
                 </p:dataTable>
             </h:panelGrid>
         </h:form>
-        <p:commandButton id="mainMenu" value="Go Home" action="main?faces-redirect=true"></p:commandButton>
+        <center><p:commandButton id="mainMenu" value="Go Home" action="main?faces-redirect=true"></p:commandButton>
+            <p:commandButton id="back" value="Back to Reverse Auctions" action="auctionList?faces-redirect=true"></p:commandButton></center>
     </h:body>
 </html>
 
