@@ -20,32 +20,88 @@
         <h:form>
             <p:menu>
                 <p:submenu label="How Can I...?">
-                    <p:menuitem value="Log In To The System"></p:menuitem>
-                    <p:menuitem value="Create An Account"></p:menuitem>
-                    <p:menuitem value="See My Reservations"></p:menuitem>
-                    <p:menuitem value="Search For Flights"></p:menuitem>
-                    <p:menuitem value="Find Recommended Flights"></p:menuitem>
-                    <p:menuitem value="Make A Reservation"></p:menuitem>
-                    <p:menuitem value="Cancel A Reservation"></p:menuitem>
-                    <p:menuitem value="Make A Reverse Auction Bid"></p:menuitem>
-                    <p:menuitem value="See My Bid History"></p:menuitem>
+                    <p:menuitem value="Log In To The System"  onclick="document.getElementById('login').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="Create An Account"  onclick="document.getElementById('createAccount').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="See My Reservations" onclick="document.getElementById('viewRes').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="Search For Flights" onclick="document.getElementById('flightSearch').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="Find Recommended Flights" onclick="document.getElementById('recommend').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="Make A Reservation" onclick="document.getElementById('createRes').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="Cancel A Reservation" onclick="document.getElementById('cancelRes').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="Make A Reverse Auction Bid" onclick="document.getElementById('bid').scrollIntoView()"></p:menuitem>
+                    <p:menuitem value="See My Bid History" onclick="document.getElementById('viewBid').scrollIntoView()"></p:menuitem>
                 </p:submenu>
             </p:menu>
         </h:form>
-        <h3>Logging In</h3>
+        <h3 id="login">Logging In</h3>
         <ol>
             <li>From the home page click the link, "Sign In".  You are redirected to a login page.</li>
             <li>Enter your e-mail address and password (case sensitive). If this is your first time using the system, follow the steps for signing up.</li>
             <li>Click the "Sign In" button. If you're e-mail and password match, you will enter to the user main page.  Otherwise, you will be redirected to an error page. From this page you have the option to try again.</li>
         </ol>
-        <h3>Creating An Account</h3>
+        <h3 id="createAccount">Creating An Account</h3>
         If you already have an account, follow the steps for logging in.  Otherwise, follow the following steps:
         <ol>
             <li>From the home page click the link, "Sign Up".  You are redirected to a registration form.</li>
             <li>Fill out all textfields in the form.  Don't leave any fields blank</li>
             <li>When the form is filled out, click the "Register" button.  If registration is successful, you will be redirected to the login page where you can login with your new account.</li>
         </ol>
-        
+        <h3 id="viewRes">Viewing Reservations</h3>
+        <h4>View Current Reservations</h4>
+        <ol>
+            <li>After logging in, from the customer main page locate the menu panel</li>
+            <li>Under "My Reservations" click "Current Reservations"</li>
+            <li>You will be navigated to a page with a list of your current reservations.</li>
+            <li>Select a reservation from the table and click the "Itinerary" button below the table to see detailed information for that reservation's itinerary.</li>
+        </ol>
+        <h4>View All Reservations</h4>
+        <ol>
+            <li>After logging in, from the customer main page locate the menu panel.</li>
+            <li>Under "My Reservations" click "All Reservations"</li>
+            <li>You will be navigated to a page with a list of your current and previous reservations.</li>
+            <li>Select a reservation from the table and click the "Itinerary" button below the table to see detailed information for that reservation's itinerary.</li>
+        </ol>
+        <h3 id="flightSearch">Searching For Flights</h3>
+        <ol>
+            <li>After logging in, from the customer main page locate the menu panel.</li>
+            <li>Under "Flights", click "Search Flights".  You will be navigated to the search screen.</li>
+            <li>Select either "Round-Trip", "One-Way", or "Multi-Trip" depending on your preference.</li>
+            <li>Fill out the resulting form, selecting arrival and departure destinations and times.  Click "Search" when you have made your selections.</li>
+            <li>The search results will be displayed on the redirected page.  You can click on a result and choose to make a reservation or bid using reverse auction.</li>
+        </ol>
+        <h3 id="recommend">Viewing Recommended Flights</h3>
+        <ol>
+            <li>After logging in, from the customer main page locate the menu panel.</li>
+            <li>Under "Flights", click "Recommended Flights".  You will be redirected to a results page, displaying the flights most recommended for you at the top, and the flights least recommended at the bottom.</li>
+        </ol>
+        <h3 id="createRes">Making Reservations</h3>
+        <ol>
+            <li>Follow the steps for searching for flights.</li>
+            <li>At the list of flight results, choose a flight from the list.</li>
+            <li>Click the "Reserve" button below the table of results to make a reservation.</li>
+            <li>In the redirected form fill out your flight preferences.</li>
+            <li>Upon completion, click the "Confirm" button to make the reservation.</li>
+        </ol>
+        <h3 id="cancelRes">Cancelling Reservations</h3>
+        <ol>
+            <li>Follow the steps for viewing current reservations.</li>
+            <li>At the list of your reservations, select a reservation from the list</li>
+            <li>Click the "Cancel" button below the list to cancel the reservation.</li>
+        </ol>
+        <h3 id="bid">Bidding for Flights</h3>
+        <ol>
+            <li>Follow the steps for searching for flights.</li>
+            <li>Select a flight from the results table, and click the "Auction" button.</li>
+            <li>At the resulting screen, enter a price you wish to pay for that flight. Click "Bid".</li>
+            <li>If your bid is rejected, you will be notified. You can choose to repeat this process with a higher bid.</li>
+            <li>If the reservation is accepted, you will be redirected to a form to enter your reservation preferences.  Proceed as you would for making a normal reservation.</li>
+        </ol>
+        <h3 id="viewBid">Viewing Reverse Auction Bids</h3>
+        <ol>
+            <li>From the main customer page, under auctions click "Reverse Auction"</li>
+            <li>The resulting screen displays a list of flights you have bid on.</li>
+            <li>Click a row and select "Full History" to see all of the bids you have made for that flight</li>
+            <li>Click a row and select "Current Bid" to see your current bid for that flight</li>
+        </ol>
     </h:body>
 </html>
 
