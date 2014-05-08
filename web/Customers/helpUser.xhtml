@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
         <title>Help a User</title>
     </h:head>
@@ -13,9 +15,15 @@
 
         </script>
         <h:form>
-            <h:outputText value="Enter Customer's Email"></h:outputText>
-            <h:inputText value='#{user.name}'/>
-            <h:commandButton value="Go Help" actionListener="#{user.storeInfo()}" action="main?faces-redirect=true"></h:commandButton>
+                    <h:panelGrid id="grid" columns="2" style="margin-bottom:15px">
+
+
+                <h:outputLabel value="Select Customer's Email " style="font-weight:bold" />
+                <p:autoComplete id="ff" dropdown="true" pt:placeholder="Enter Email Address" value="#{user.name}" 
+                                completeMethod="#{emp.produceEmails2()}" />
+                    </h:panelGrid>
+
+            <p:commandButton value="Go Help" actionListener="#{user.storeInfo()}" action="main?faces-redirect=true"></p:commandButton>
         </h:form>
     </h:body>
 </html>
