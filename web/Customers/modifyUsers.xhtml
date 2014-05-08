@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <script type="text/javascript">
+            if ("#{emp.loggedIn}" !== "EmpValid") {
+                window.location.replace("../employeeLogin.xhtml");
+            }
+        </script>
+        <h1> Customer List </h1>
+        #{emp.produceUsers()}
+        <h:form id="form">
+            <h:panelGrid id="display">
+                <p:dataTable value="#{emp.users}" var="o" rowKey="#{o.accountNo}" selectionMode="single"
+                             selection="#{emp.selectedUser}" styleClass="user-table">
+                    <p:column headerText="ID">
+                        #{o.id}
+                    </p:column>
+
+                    <p:column headerText="Account Number">
+                        #{o.accountNo}
+                    </p:column>
+
+                    <p:column headerText="Credit Card Number">
+                        #{o.creditNo}
+                    </p:column>
+
+                    <p:column headerText="Email Address">
+                        #{o.email}
+                    </p:column>
+
+                    <p:column headerText="CreationDate">
+                        #{o.creationDate}
+                    </p:column>
+                    <f:facet name="footer">
+                        <p:commandButton id="editButton" value="Edit" action="editUser"/>
+                        <p:commandButton id="cancelButton"  process="@all"  ajax="false" value="Delete" onclick="window.location.reload()" actionListener="#{emp.deleteUser()}"  icon="ui-icon-circle-close"/>
+                        <p:commandButton id="addButton" value="Add" onclick="window.location.replace('../register.xhtml')"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:panelGrid>
+        </h:form>
+
+    </h:body>
+</html>
+

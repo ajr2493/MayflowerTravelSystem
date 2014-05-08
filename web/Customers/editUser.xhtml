@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Registration Page</title>
+    </h:head>
+    <h:body>
+        <f:view>
+            <h:form id="registerForm">
+                <table>
+                    <tr>
+                        <td><h:outputText value="Enter Your Email"/></td>
+                        <td><h:inputText id="name" value="#{emp.selectedUser.email}" required="true"
+                                         requiredMessage="Name field should be filled"/></td>
+                        <td><h:message for="name" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter First Name"/></td>
+                        <td><h:inputText id="fname" value="#{emp.selectedUser.firstName}" required="true"
+                                         requiredMessage="Name field should be filled"/></td>
+                        <td><h:message for="fname" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter Last Name"/></td>
+                        <td><h:inputText id="lname" value="#{emp.selectedUser.lastName}" required="true"
+                                         requiredMessage="Name field should be filled"/></td>
+                        <td><h:message for="lname" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter Address"/></td>
+                        <td><h:inputText id="addr" value="#{emp.selectedUser.address}" required="true"
+                                         requiredMessage="Address field should be filled"/></td>
+                        <td><h:message for="addr" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter City"/></td>
+                        <td><h:inputText id="city" value="#{emp.selectedUser.city}" required="true"
+                                         requiredMessage="City field should be filled"/></td>
+                        <td><h:message for="city" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter State"/></td>
+                        <td><h:inputText id="state" value="#{emp.selectedUser.state}" required="true"
+                                         requiredMessage="State field should be filled"/></td>
+                        <td><h:message for="state" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter Zip Code"/></td>
+                        <td><h:inputText id="zip" value="#{emp.selectedUser.zip}" required="true"
+                                         requiredMessage="Zip field should be filled"/></td>
+                        <td><h:message for="zip" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText value="Enter Credit Card Number :"/></td>
+                        <td><h:inputText id="ccn" value="#{emp.selectedUser.creditNo}" required="true"
+                                         requiredMessage="Credit card field should be filled"/></td>
+                        <td><h:message for="ccn" style="color:red"/></td>
+                    </tr>
+                    <tr>
+                        <td><p:commandButton value="Update" action="modifyUsers?redirect=true" actionListener="#{emp.updateUser()}" /></td>
+                    </tr>
+                    <tr>
+                        <td><p:commandButton value="Go Back" action="modifyUsers?faces-redirect=true"/></td>
+                    </tr>
+                </table>
+            </h:form>
+        </f:view>
+    </h:body>
+</html>
